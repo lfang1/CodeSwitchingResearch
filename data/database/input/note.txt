@@ -1,0 +1,2 @@
+CMU3482 is not in non_cs surprisal
+CMU3482 is removed in 02022019_non_cs_corpus.csv and 02022019_all_clean_non_cs.csv text qualitfier {none}

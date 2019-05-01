@@ -1,0 +1,3 @@
+﻿sentene ID,original,translation,untranslated,indicesOfCS,indicesOfCSIntranslation,punctOrignal,punctTranslation,cs type,sentence type,source
+1457,富有 责任心 现在 就 申请 请 发送 你 的 resume 至 em@111,富有 责任心 现在 就 申请 请 发送 你 的 简历 至 em@111,[],[9],[9],[],[],CS,clean_code_switch,PSU
+1722,本人 有 king size 床 和 twin 床 各 一 套 ， 需要 可以 联系 我 ， em@160,本人 有 特大 号 床 和 小号 床 各 一 套 ， 需要 可以 联系 我 ， em@160,[],[2_3_6],[2_3_6],[11_16],[11_16],CS_CS_CS,clean_code_switch,PSU

@@ -1,0 +1,15 @@
+CMU_1
+	p( <unk> | <s> ) 	= [OOV] 0 [ -inf ]
+	p( </s> | <unk> ...) 	= [1gram] 0.0173925 [ -1.759638 ]
+1 sentences, 1 words, 1 OOVs
+0 zeroprobs, logprob= -1.759638 ppl= 57.49604 ppl1= undefined
+
+非常 好
+	p( 非常 | <s> ) 	= [2gram] 3.1976e-05 [ -4.495176 ]
+	p( 好 | 非常 ...) 	= [2gram] 0.01189853 [ -1.924507 ]
+	p( </s> | 好 ...) 	= [2gram] 0.0001011202 [ -3.995162 ]
+1 sentences, 2 words, 0 OOVs
+0 zeroprobs, logprob= -10.41484 ppl= 2962.203 ppl1= 161221.2
+
+file /mnt/d/App/Dropbox/Fred/research/short paper/corpus/cs/sentence_need_fix.txt: 2 sentences, 3 words, 1 OOVs
+0 zeroprobs, logprob= -12.17448 ppl= 1105.657 ppl1= 1222479

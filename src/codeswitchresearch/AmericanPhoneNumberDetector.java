@@ -1,0 +1,47 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package codeswitchresearch;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ *
+ * @author Le
+ */
+public class AmericanPhoneNumberDetector {
+
+    public static boolean validatePhoneNumber(String phoneNo) {
+        //validate phone numbers of format "1234567890"
+        if (phoneNo.matches("\\d{10}")) {
+            return true;
+        } //validating phone number with -, . or spaces
+        else if (phoneNo.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}")) {
+            return true;
+        } //validating phone number with extension length from 3 to 5
+        else if (phoneNo.matches("\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}")) {
+            return true;
+        } //validating phone number where area code is in braces ()
+        else if (phoneNo.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+            return true;
+        } //return false if nothing matches the input
+        else {
+            return false;
+        }
+
+    }
+
+    public static String extractAmericanPhoneNumber(String s) {
+        Pattern pattern = Pattern.compile("\\d{3}-\\d{3}-\\d{4}");
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find()) {
+            return matcher.group(0);
+        } else {
+            System.err.println("The American phone number is not found!");
+            return "";
+        }
+    }
+}
