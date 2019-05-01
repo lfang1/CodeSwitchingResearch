@@ -11,4 +11,5 @@ In order to identify code-switching in the corpus, I built a Chinese Dictionary 
   After I recevied the translation, I wrote some codes to get a refined corpus by cleaning and merging the translated sentences with the original sentences, and getting location indices of each code-switched word and punctuation in the translated sentences. 
 
   Later, I used Stanford Parser to get part-of-speech tags, dependency relation and syntactic governor for all the sentences in the refined corpus. I also used a Chinese 5-gram Wikipedia language model to calcualte surprisal of each word in each sentence in the refined corpus.
-After cleaning the sentences, I got a code-switched Database CSV file and a non-code-switched Database CSV file. By matching a similar non-code-switched sentence to a code-switched sentence, I got an input CSV file to run model selection in R.
+
+  After cleaning the sentences, I got a code-switched Database CSV file and a non-code-switched Database CSV file. By matching a similar non-code-switched sentence to a code-switched sentence, I got an input CSV file to run model selection in R.
