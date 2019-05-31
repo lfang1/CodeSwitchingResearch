@@ -1,5 +1,0 @@
-1	CMU_1	_	CD	CD	_	0	root	_	_
-
-1	非常	_	AD	AD	_	2	advmod	_	_
-2	好	_	VA	VA	_	0	root	_	_
-
