@@ -35,7 +35,8 @@ public class TranslationWithIndices {
 
     public static void main(String args[]) throws FileNotFoundException, UnsupportedEncodingException {
         readTranslationCSVFile();
-        saveToCSVFile(corpusName, csSentences);
+        //saveToCSVFile(corpusName, csSentences);
+        saveToCSVFile(csSentences);
         //test();
     }
 
@@ -47,16 +48,18 @@ public class TranslationWithIndices {
 
         try {
             //Reading the csv file
-            File fileDir = new File("data/cs-sentences-with-translated-sentences/ctb-segmented-11082018-"
-                    + corpusName
+//            File fileDir = new File("data/cs-sentences-with-translated-sentences/ctb-segmented-11082018-"
+//                    + corpusName
+//                    + ".csv");
+            File fileDir = new File("data/validation/11032019_cs_index_input"
                     + ".csv");
             br = new BufferedReader(
                     new InputStreamReader(
                             new FileInputStream(fileDir), "UTF8"));
 
             String line = "";
-            //Read to skip the header
-            br.readLine();
+//            //Read to skip the header
+//            br.readLine();
             //Reading from the second line
             while ((line = br.readLine()) != null) {
                 String[] sentenceDetails = line.split(COMMA_DELIMITER);
@@ -68,7 +71,8 @@ public class TranslationWithIndices {
                             System.out.println(s);
                         }
                     }
-                    int sentenceId = Integer.parseInt(sentenceDetails[0]);
+//                    int sentenceId = Integer.parseInt(sentenceDetails[0]);
+                    String sentenceIdString = sentenceDetails[0];
                     String codeSwitchedSentence = sentenceDetails[1];
                     codeSwitchedSentence = codeSwitchedSentence.trim();
                     ArrayList<String> wordsInCSSentence = new ArrayList<>();
@@ -190,9 +194,9 @@ public class TranslationWithIndices {
                                     lastTIndex = i;
                                     break;
                                 //Unknown word with no punctuation inside;
-                                case 2:                               
-                                        indicesOfCodeSwitchedWordInTranslation.add(i);
-                                        lastTIndex = i;                                  
+                                case 2:
+                                    indicesOfCodeSwitchedWordInTranslation.add(i);
+                                    lastTIndex = i;
                                     break;
                                 //Single punctuation or email id or phone number id or unknown word with punctuation
                                 //Note: all ","(English comma) is replaced by "，" (Chinese comma) for using csv format
@@ -215,7 +219,7 @@ public class TranslationWithIndices {
                     }
 
                     //Save the CSS details in CSS object
-                    CodeSwitchedSentence s = new CodeSwitchedSentence(sentenceId,
+                    CodeSwitchedSentence s = new CodeSwitchedSentence(sentenceIdString,
                             codeSwitchedSentence,
                             translatedSentence,
                             untranslatedWord,
@@ -297,14 +301,14 @@ public class TranslationWithIndices {
                     w.append(css.getIndicesOfCodeSwitchedWordInTranslation().toString().replace(",", "_").replace(" ", ""));
                     w.append(COMMA_DELIMITER);
                     if (css.getIndicesOfPunctuation().isEmpty()) {
-                        w.append("");
+                        w.append("[]");
                         w.append(COMMA_DELIMITER);
                     } else {
                         w.append(css.getIndicesOfPunctuation().toString().replace(",", "_").replace(" ", ""));
                         w.append(COMMA_DELIMITER);
                     }
                     if (css.getIndicesOfPunctuationInTranslation().isEmpty()) {
-                        w.append("");
+                        w.append("[]");
                     } else {
                         w.append(css.getIndicesOfPunctuationInTranslation().toString().replace(",", "_").replace(" ", ""));
                     }
@@ -328,6 +332,94 @@ public class TranslationWithIndices {
                     + "data/translation-with-indices/"
                     + "11102018-"
                     + corpusName
+                    + ".csv");
+        }
+    }
+
+    public static void saveToCSVFile(List<CodeSwitchedSentence> cssList)
+            throws FileNotFoundException, UnsupportedEncodingException {
+
+        //Delimiter used in CSV file
+        final String COMMA_DELIMITER = ",";
+        final String NEW_LINE_SEPARATOR = "\n";
+        //CSV file header
+
+        final String FILE_HEADER = "SentenceID,"
+                + "CodeSwitchedSentence,"
+                + "TranslatedSentence,"
+                + "UntranslatedWord,"
+                + "IndicesOfCodeSwitchedWord,"
+                + "IndicesOfCodeSwitchedWordInTranslation,"
+                + "IndicesOfPunctuation,"
+                + "IndicesOfPunctuationInTranslation";
+
+        try {
+//            File outputfileName = new File("data/translation-with-indices/"
+//                    + "11102018-"
+//                    + corpusName
+//                    + ".csv");
+            File outputfileName = new File("data/translation-with-indices/"
+                    + "11032019_cs_index_added"
+                    + ".csv");
+            System.out.println("The file will be saved in: "
+                    + outputfileName.getPath());
+            FileOutputStream is = new FileOutputStream(outputfileName);
+            OutputStreamWriter osw = new OutputStreamWriter(is, "UTF-8");
+            BufferedWriter w = new BufferedWriter(osw);
+
+            //Write the CSV file header
+            w.append(FILE_HEADER);
+
+            //Add a new line separator after the header
+            w.append(NEW_LINE_SEPARATOR);
+
+            for (CodeSwitchedSentence css : cssList) {
+                try {
+                    w.append(String.valueOf(css.getSentenceIdString()));
+                    w.append(COMMA_DELIMITER);
+                    String newSentence = css.getCodeSwitchedSentence();
+                    newSentence = newSentence.trim();
+                    w.append(newSentence);
+                    w.append(COMMA_DELIMITER);
+                    w.append(css.getTranslatedSentence());
+                    w.append(COMMA_DELIMITER);
+                    w.append(css.getUntranslatedSentence().toString().replace(",", "_").replace(" ", ""));
+                    w.append(COMMA_DELIMITER);
+                    w.append(css.getIndicesOfCodeSwitchedWord().toString().replace(",", "_").replace(" ", ""));
+                    w.append(COMMA_DELIMITER);
+                    w.append(css.getIndicesOfCodeSwitchedWordInTranslation().toString().replace(",", "_").replace(" ", ""));
+                    w.append(COMMA_DELIMITER);
+                    if (css.getIndicesOfPunctuation().isEmpty()) {
+                        w.append("[]");
+                        w.append(COMMA_DELIMITER);
+                    } else {
+                        w.append(css.getIndicesOfPunctuation().toString().replace(",", "_").replace(" ", ""));
+                        w.append(COMMA_DELIMITER);
+                    }
+                    if (css.getIndicesOfPunctuationInTranslation().isEmpty()) {
+                        w.append("[]");
+                    } else {
+                        w.append(css.getIndicesOfPunctuationInTranslation().toString().replace(",", "_").replace(" ", ""));
+                    }
+                    w.append(NEW_LINE_SEPARATOR);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(TranslationWithIndices.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
+            };
+
+            System.out.println("CSV file was created successfully !!!");
+
+            w.flush();
+            w.close();
+            System.out.println("The file has been saved.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Problem writing to the "
+                    + "data/translation-with-indices/"
+                    + "11032019_cs_index_added"
                     + ".csv");
         }
     }
