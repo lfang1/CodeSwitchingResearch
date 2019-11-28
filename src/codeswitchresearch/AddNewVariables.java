@@ -26,21 +26,24 @@ import java.util.logging.Logger;
  *
  * @author Le
  */
-public class GetPredictors {
+public class AddNewVariables {
 
-    static String inputFilename = "input_R_v2";
-    static LinkedList<String[]> sentenceList = new LinkedList<>();
-    static ArrayList<String> chinesePunctuationList = new ArrayList<>();
-    static LinkedHashMap<String, String> bilingualCorpusFrequencyDictionary = new LinkedHashMap<>();
+//    static String inputFilename = "input_R_v2";
+    private static String inputFilename = "input_R_v4_new_15_11_2019";
+    private static LinkedList<String[]> sentenceList = new LinkedList<>();
+    private static ArrayList<String> chinesePunctuationList = new ArrayList<>();
+    private static ArrayList<String> englishPunctuationList = new ArrayList<>();
+    private static LinkedHashMap<String, String> bilingualCorpusFrequencyDictionary = new LinkedHashMap<>();
 
     public static void main(String[] args) {
-        initalizeChinesePunctuationList();
+        initializeChinesePunctuationList();
+        initializeEnglishPunctuationList();
         initializeBilingualCorpusDictionary();
         readCSVFile();
         writeCSVFile();
     }
 
-    public static void initalizeChinesePunctuationList() {
+    public static void initializeChinesePunctuationList() {
         chinesePunctuationList.add("？");
         chinesePunctuationList.add("，");
         chinesePunctuationList.add(",");
@@ -78,8 +81,44 @@ public class GetPredictors {
         chinesePunctuationList.add("•");
     }
 
+    private static void initializeEnglishPunctuationList() {
+        englishPunctuationList = new ArrayList<>();
+        englishPunctuationList.add("!");
+        englishPunctuationList.add("\"");
+        englishPunctuationList.add("#");
+        englishPunctuationList.add("$");
+        englishPunctuationList.add("%");
+        englishPunctuationList.add("&");
+        englishPunctuationList.add("'");
+        englishPunctuationList.add("(");
+        englishPunctuationList.add(")");
+        englishPunctuationList.add("*");
+        englishPunctuationList.add("+");
+        englishPunctuationList.add(",");
+        englishPunctuationList.add("-");
+        englishPunctuationList.add(".");
+        englishPunctuationList.add("/");
+        englishPunctuationList.add(":");
+        englishPunctuationList.add(";");
+        englishPunctuationList.add("<");
+        englishPunctuationList.add("=");
+        englishPunctuationList.add(">");
+        englishPunctuationList.add("?");
+        englishPunctuationList.add("@");
+        englishPunctuationList.add("[");
+        englishPunctuationList.add("\\");
+        englishPunctuationList.add("]");
+        englishPunctuationList.add("^");
+        englishPunctuationList.add("_");
+        englishPunctuationList.add("`");
+        englishPunctuationList.add("{");
+        englishPunctuationList.add("|");
+        englishPunctuationList.add("}");
+        englishPunctuationList.add("~");
+    }
+
     public static boolean isPunctuation(String chars) {
-        if (chars.matches("\\p{Punct}+")
+        if (englishPunctuationList.contains(chars)
                 || chinesePunctuationList.contains(chars)) {
             return true;
         } else {
@@ -110,17 +149,17 @@ public class GetPredictors {
                 bilingualCorpusFrequencyDictionary.put(columns[0], columns[1]);
             }
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 br.close();
                 System.out.println("bilingual corpus frequency dictionary has been initialized successfully.");
             } catch (IOException ex) {
-                Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -129,7 +168,7 @@ public class GetPredictors {
         BufferedReader br = null;
         String line = "";
         int invalidPairCount = 0;
-//        double maxSurprisal = 0.0;
+        //double maxSurprisal = 0.0;
         File fileDir = new File("data/add_new_variables/input/"
                 + inputFilename
                 + ".csv");
@@ -142,10 +181,13 @@ public class GetPredictors {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] sentenceDetails = line.split(",");
-                if (sentenceDetails.length != 14) {
-                    System.out.println("line: " + line + " " + sentenceDetails.length);
+                //The previous length is 14, now is 15
+                if (sentenceDetails.length != 15) {
+                    System.out.println("line: " + sentenceDetails.length);
                 } else {
-                    String[] appended = new String[23];
+
+                    //NOTE: the new string[] has 24 items, the previous one has 23 items
+                    String[] appended = new String[24];
                     String englishWordLength = "";
                     String chineseWordLength = "";
                     String ifPreviousWordIsPunctuation = "";
@@ -153,17 +195,25 @@ public class GetPredictors {
                     String bilingualCorpusFrequencyNegativeLn = "";
                     String translationBilingualCorpusFrequencyNegativeLn = "";
                     if (sentenceDetails[0].equals("code-switch")) {
-                        bilingualCorpusFrequencyNegativeLn = bilingualCorpusFrequencyDictionary.get(sentenceDetails[6]);
+                        bilingualCorpusFrequencyNegativeLn = bilingualCorpusFrequencyDictionary.get(sentenceDetails[7]);
+                        //System.out.println("bilingualCorpusFrequencyNegativeLn: " + bilingualCorpusFrequencyNegativeLn);
                         try {
-                            if (!bilingualCorpusFrequencyNegativeLn.isEmpty()) {
+                            if (bilingualCorpusFrequencyNegativeLn == null) {
+                                bilingualCorpusFrequencyNegativeLn = "";
+                                //System.out.println(sentenceDetails[7] + " with null frequency negative Ln in : " + line);                               
+                            } else if (!bilingualCorpusFrequencyNegativeLn.isEmpty()) {
                                 bilingualCorpusFrequencyNegativeLn = String.valueOf(-Math.log(Double.parseDouble(bilingualCorpusFrequencyNegativeLn)));
                             }
-                            englishWordLength = String.valueOf(sentenceDetails[6].length());
+
+//                            if (!bilingualCorpusFrequencyNegativeLn.isEmpty()) {
+//                                bilingualCorpusFrequencyNegativeLn = String.valueOf(-Math.log(Double.parseDouble(bilingualCorpusFrequencyNegativeLn)));
+//                            }
+                            englishWordLength = String.valueOf(sentenceDetails[7].length());
                         } catch (NullPointerException ne) {
-                            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ne);
+                            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ne);
                             System.out.println("line: " + line);
                             System.out.println("bilingualCorpusFrequencyNegativeLn: " + bilingualCorpusFrequencyNegativeLn);
-                            for (int i = 0; i < 14; i++) {
+                            for (int i = 0; i < 15; i++) {
                                 System.out.println(i + " " + sentenceDetails[i]);
                             }
                             System.exit(1);
@@ -177,9 +227,9 @@ public class GetPredictors {
 //                        }
 //                        englishWordLength = String.valueOf(sentenceDetails[6].length());
                     }
-                    String[] wordsInTranslation = sentenceDetails[4].split("\\s+");
-                    int csWordIndex = Integer.valueOf(sentenceDetails[5]) - 1;
-                    String[] surprisals = sentenceDetails[13].split("\\s+");
+                    String[] wordsInTranslation = sentenceDetails[5].split("\\s+");
+                    int csWordIndex = Integer.valueOf(sentenceDetails[6]) - 1;
+                    String[] surprisals = sentenceDetails[14].split("\\s+");
 
                     if (csWordIndex > 0) {
                         if (!isPunctuation(wordsInTranslation[csWordIndex - 1])) {
@@ -195,6 +245,7 @@ public class GetPredictors {
 
                     double sum = 0.0;
                     for (int i = 0; i < surprisals.length; i++) {
+                        //replace the infinity by the max surprisal
                         if (surprisals[i].equals("Infinity")) {
                             surprisals[i] = "10.51329";
                         }
@@ -203,9 +254,9 @@ public class GetPredictors {
 //                            maxSurprisal = Double.parseDouble(surprisals[i]);
 //                        }
                     }
-                    sentenceDetails[13] = String.join(" ", surprisals);
-                    String averageSurprisal = String.valueOf(sum / surprisals.length);
 
+                    sentenceDetails[14] = String.join(" ", surprisals);
+                    String averageSurprisal = String.valueOf(sum / surprisals.length);
                     if (surprisals.length != wordsInTranslation.length) {
 //                        System.out.println("Sentence " + sentenceDetails[0] + "_" + sentenceDetails[1] + "_" + sentenceDetails[2]);
 //                        System.out.println("surprisals and wordsInTranslation don't have the same size!");
@@ -233,65 +284,70 @@ public class GetPredictors {
                         surprisalOfPreviousWord = "";
                     }
 
-                    translationBilingualCorpusFrequencyNegativeLn = bilingualCorpusFrequencyDictionary.get(sentenceDetails[7]);
+                    translationBilingualCorpusFrequencyNegativeLn = bilingualCorpusFrequencyDictionary.get(sentenceDetails[8]);
                     if (translationBilingualCorpusFrequencyNegativeLn == null) {
                         translationBilingualCorpusFrequencyNegativeLn = "";
                     } else if (!translationBilingualCorpusFrequencyNegativeLn.isEmpty()) {
                         translationBilingualCorpusFrequencyNegativeLn = String.valueOf(-Math.log(Double.parseDouble(translationBilingualCorpusFrequencyNegativeLn)));
                     }
-                    chineseWordLength = String.valueOf(sentenceDetails[7].length());
+                    chineseWordLength = String.valueOf(sentenceDetails[8].length());
 
                     //check if cs word is root "0" for false; "1" for true
                     String ifItIsRoot = "";
                     //Distancee between the word and its parent node, 
                     String depDistance = "";
-                    if (!sentenceDetails[12].equals("root")) {
+                    if (!sentenceDetails[13].equals("root")) {
                         ifItIsRoot = "0";
-                        depDistance = String.valueOf(Math.abs(Integer.parseInt(sentenceDetails[11]) - Integer.parseInt(sentenceDetails[5])));
+                        depDistance = String.valueOf(Math.abs(Integer.parseInt(sentenceDetails[12]) - Integer.parseInt(sentenceDetails[6])));
                     } else {
                         ifItIsRoot = "1";
                         depDistance = "0";
                     }
 
-                    if (sentenceDetails[9].equals("Infinity")) {
-//                        if(Double.parseDouble(sentenceDetails[9]) - maxSurprisal > 0)
-//                        maxSurprisal = Double.parseDouble(sentenceDetails[9]);
-                        sentenceDetails[9] = "10.16642";
+                    if (sentenceDetails[10].equals("Infinity")) {
+//                        if (Double.parseDouble(sentenceDetails[10]) - maxSurprisal > 0) {
+//                            maxSurprisal = Double.parseDouble(sentenceDetails[10]);
+//                        }
+                        //replace infinity to a max surprisal value
+                        sentenceDetails[10] = "10.16642";
                     }
 
-                    if (!sentenceDetails[8].isEmpty()) {
-                        sentenceDetails[8] = String.valueOf(-Math.log(Double.parseDouble(sentenceDetails[8])));
+                    
+                    if (!sentenceDetails[9].isEmpty()) {
+                        sentenceDetails[9] = String.valueOf(-Math.log(Double.parseDouble(sentenceDetails[9])));
                     }
 
-                    System.arraycopy(sentenceDetails, 0, appended, 0, 14);
-                    appended[14] = averageSurprisal;
-                    appended[15] = bilingualCorpusFrequencyNegativeLn;
-                    appended[16] = translationBilingualCorpusFrequencyNegativeLn;
-                    appended[17] = englishWordLength;
-                    appended[18] = chineseWordLength;
-                    appended[19] = depDistance;
-                    appended[20] = ifItIsRoot;
-                    appended[21] = ifPreviousWordIsPunctuation;
-                    appended[22] = surprisalOfPreviousWord;
+                    System.arraycopy(sentenceDetails, 0, appended, 0, 15);
+                    appended[15] = averageSurprisal;
+                    appended[16] = bilingualCorpusFrequencyNegativeLn;
+                    appended[17] = translationBilingualCorpusFrequencyNegativeLn;
+                    appended[18] = englishWordLength;
+                    appended[19] = chineseWordLength;
+                    appended[20] = depDistance;
+                    appended[21] = ifItIsRoot;
+                    appended[22] = ifPreviousWordIsPunctuation;
+                    appended[23] = surprisalOfPreviousWord;
                     sentenceList.add(appended);
+                     
                 }
 
             }
+
             System.out.println(sentenceList.size() + " sentences have been added.");
             System.out.println("invalid pair count: " + invalidPairCount);
-//            System.out.println(maxSurprisal);
+            //System.out.println(maxSurprisal);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 br.close();
                 System.out.println("input file has been read successfully.");
             } catch (IOException ex) {
-                Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -302,11 +358,13 @@ public class GetPredictors {
             //Delimiter used in CSV file
             final String COMMA_DELIMITER = ",";
             final String NEW_LINE_SEPARATOR = "\n";
-            final String outputFilename = "03082019_" + "appended_" + inputFilename;
+            //final String outputFilename = "03082019_" + "appended_" + inputFilename;
+            final String outputFilename = "11152019_" + "appended_" + inputFilename;
             //CSV file header
             final String FILE_HEADER = "sent_type,"
                     + "university,"
                     + "sent_id,"
+                    + "aligned_to,"
                     + "original_sentence,"
                     + "translation,"
                     + "word_id,"
@@ -352,11 +410,11 @@ public class GetPredictors {
             System.out.println("The file has been saved.");
 
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(GetPredictors.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddNewVariables.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

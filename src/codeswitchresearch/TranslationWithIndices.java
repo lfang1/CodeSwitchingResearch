@@ -16,10 +16,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -38,6 +42,7 @@ public class TranslationWithIndices {
         //saveToCSVFile(corpusName, csSentences);
         saveToCSVFile(csSentences);
         //test();
+        //testFindClosestIndices();
     }
 
     public static void readTranslationCSVFile() {
@@ -51,7 +56,7 @@ public class TranslationWithIndices {
 //            File fileDir = new File("data/cs-sentences-with-translated-sentences/ctb-segmented-11082018-"
 //                    + corpusName
 //                    + ".csv");
-            File fileDir = new File("data/validation/11032019_cs_index_input"
+            File fileDir = new File("data/validation/11112019_cs_index_input"
                     + ".csv");
             br = new BufferedReader(
                     new InputStreamReader(
@@ -60,8 +65,13 @@ public class TranslationWithIndices {
             String line = "";
 //            //Read to skip the header
 //            br.readLine();
+
             //Reading from the second line
             while ((line = br.readLine()) != null) {
+                //FIXME: debug
+//                if (csSentences.size() == 1) {
+//                    return;
+//                }
                 String[] sentenceDetails = line.split(COMMA_DELIMITER);
 
                 if (sentenceDetails.length > 0) {
@@ -86,7 +96,7 @@ public class TranslationWithIndices {
                     ArrayList<Integer> indicesOfCodeSwitchedWord = new ArrayList<>();
                     ArrayList<Integer> indicesOfPunctuation = new ArrayList<>();
 
-                    int lastCodeSwitchIndex = -1;
+                    int lastCodeSwitchIndex = -2;
 
                     for (int i = 0; i < wordsInCSSentence.size(); i++) {
                         String word = wordsInCSSentence.get(i);
@@ -101,10 +111,27 @@ public class TranslationWithIndices {
                                 lastCodeSwitchIndex = i;
                                 break;
                             //Unknown word with no punctuation inside found;
+                            //FIXME: In CMU_1 "气垫床" is unknow word, will fall into case 2
+                            //房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 大号 的 床 和 一 个 气垫床 ；
                             case 2:
-                                if (i - lastCodeSwitchIndex == 1) {  //If the previous word is CS word, then this is also considered English
-                                    indicesOfCodeSwitchedWord.add(i);
-                                    lastCodeSwitchIndex = i;
+                                //in CMU_1 word "气垫床" falls into case 2:
+                                //pattern for Chinese characters
+                                String chineseRegex = "[\\p{IsHan}]+";
+                                Pattern chinesePattern = Pattern.compile(chineseRegex);
+                                Matcher chineseMatcher = chinesePattern.matcher(word);
+
+                                //FIXME: digitRegex is not working
+                                String digitRegex = "^\\d+$";
+                                Pattern digitPattern = Pattern.compile(digitRegex);
+                                Matcher digitMatcher = chinesePattern.matcher(word);
+
+                                //check if it is not a chinese word found
+                                if (!chineseMatcher.matches()) {
+                                    //If the previous word is CS word, then this is also considered as English
+                                    if (i - lastCodeSwitchIndex == 1) {
+                                        indicesOfCodeSwitchedWord.add(i);
+                                        lastCodeSwitchIndex = i;
+                                    }
                                 }
                                 break;
                             //Single punctuation or email id or phone number id
@@ -172,14 +199,57 @@ public class TranslationWithIndices {
                     ArrayList<Integer> indicesOfCodeSwitchedWordInTranslation = new ArrayList<>();
                     ArrayList<Integer> indicesOfPunctuationInTranslation = new ArrayList<>();
                     ArrayList<String> untranslatedWord = new ArrayList<>();
-                    int lastTIndex = -1;
+                    ArrayList<String> repeatedCSWord = new ArrayList<>();
+                    int lastTIndex = -2;
                     for (int i = 0; i < wordsInTranslatedSentence.size(); i++) {
                         String word = wordsInTranslatedSentence.get(i);
                         int type = identifier.checkTheWord(word);
-
-                        //When the translated code-switched word exists more than once in the orignal sentence, it will not be considered as a translated code-switched word.
-                        if (wordsInCSSentence.contains(word) && type == 0) {
-                            continue;
+                        //FIXME: When the translation of code-switch word already exists in the orignal sentence, it will not be considered as a translated code-switched word.
+                        //check if the word in in original cs-sentence, it is not single punctation or email id and phone number id
+                        // and it is a Chinese word in the dictionary
+              
+                        if (wordsInCSSentence.contains(word) && type != 3 && type != 4) {
+                            //check if the repeated word  is already added
+                            //FIXME repeate cs-word for multiple cs-segments cannot be identified 
+                            if (repeatedCSWord.contains(word)) {
+                                continue;
+                            }
+                            int occurCounterInOriginal = 0;
+                            int occurCounterInTranslation = 0;
+                            //count occurence of translation of cs-word in the orignal sentence
+                            for (String w : wordsInCSSentence) {
+                                if (w.equals(word)) {
+                                    occurCounterInOriginal++;
+                                }
+                            }
+                            //count occurence of translation of cs-word in the translation sentence
+                            for (String w : wordsInTranslatedSentence) {
+                                if (w.equals(word)) {
+                                    occurCounterInTranslation++;
+                                }
+                            }
+                            //check if translation of code-switch word occurs more times than it occurs in original sentence 
+                            if (occurCounterInTranslation > occurCounterInOriginal) {
+                                CSPhraseFinder cspf = new CSPhraseFinder();
+                                //get cs-segment
+                                ArrayList<ArrayList<Integer>> indicesOfCSSegment = cspf.findIndicesOfCSSegment(indicesOfCodeSwitchedWord, indicesOfPunctuation);
+                                //check if there is only one cs-segment
+                                if (indicesOfCSSegment.size() == 1) {
+                                    //get the index of the first cs-word in this cs-segment
+                                    int firstCSWordIndex = indicesOfCSSegment.get(0).get(0);
+                                    int correctIndex = findCorrectIndex(word, firstCSWordIndex, wordsInCSSentence, wordsInTranslatedSentence);
+                                    if (correctIndex == -1) {
+                                        System.out.println("correct index not found for " + word + " in " + sentenceIdString);
+                                        System.out.println(codeSwitchedSentence);
+                                        System.out.println(translatedSentence);
+                                    }
+                                    indicesOfCodeSwitchedWordInTranslation.add(correctIndex);
+                                    lastTIndex = correctIndex;
+                                    repeatedCSWord.add(word);
+                                } else {
+                                    System.out.println("More than 1 repeated cs-segment: " + sentenceIdString);
+                                }
+                            }
                         } else {
                             switch (type) {
                                 //Chinese word found
@@ -193,8 +263,10 @@ public class TranslationWithIndices {
                                     indicesOfCodeSwitchedWordInTranslation.add(i);
                                     lastTIndex = i;
                                     break;
-                                //Unknown word with no punctuation inside;
+                                //Unknown word (Chinese, English, or mixed words) with no punctuation inside;
                                 case 2:
+                                    //Note: in CMU_1 word "气垫床" falls into case 2:
+                                    //pattern for Chinese characters
                                     indicesOfCodeSwitchedWordInTranslation.add(i);
                                     lastTIndex = i;
                                     break;
@@ -218,6 +290,12 @@ public class TranslationWithIndices {
 
                     }
 
+                    //check if a the item is not in ascending order.
+//                    if(indicesOfCodeSwitchedWordInTranslation.size() > 1 && indicesOfCodeSwitchedWordInTranslation.get(0) > indicesOfCodeSwitchedWordInTranslation.get(1)) {
+//                        System.out.println(indicesOfCodeSwitchedWordInTranslation.toString());
+//                    }
+                    Collections.sort(indicesOfCodeSwitchedWordInTranslation);
+                    
                     //Save the CSS details in CSS object
                     CodeSwitchedSentence s = new CodeSwitchedSentence(sentenceIdString,
                             codeSwitchedSentence,
@@ -250,90 +328,49 @@ public class TranslationWithIndices {
         }
     }
 
-    public static void saveToCSVFile(String corpusName, List<CodeSwitchedSentence> cssList)
-            throws FileNotFoundException, UnsupportedEncodingException {
+    public static void testFindCorrectIndex() {
+        String repeatedTranslatedCSWord = "房子";
+        ArrayList<String> wordsInCodeSwitchedSentence = new ArrayList<>(Arrays.asList("其他", "附近", "的", "房子", "可能", "有", "个别", "卧室", "或者", "house", "也", "可以", "夏天", "短", "租", "的", "。"));
+        ArrayList<String> wordsInTranslatedSentence = new ArrayList<>(Arrays.asList("其他", "附近", "的", "房子", "可能", "有", "个别", "卧室", "或者", "整", "套", "房子", "也", "可以", "夏天", "短", "租", "的", "。"));
+        //int result = findClosestIndices(repeatedTranslatedCSWord, indicesOfCodeSwitchedWord, indicesOfPunctuation, wordsInCodeSwitchedSentence, wordsInTranslatedSentence);
+        //System.out.println(result);
+    }
 
-        //Delimiter used in CSV file
-        final String COMMA_DELIMITER = ",";
-        final String NEW_LINE_SEPARATOR = "\n";
-        //CSV file header
-
-        final String FILE_HEADER = "SentenceID,"
-                + "CodeSwitchedSentence,"
-                + "TranslatedSentence,"
-                + "UntranslatedWord,"
-                + "IndicesOfCodeSwitchedWord,"
-                + "IndicesOfCodeSwitchedWordInTranslation,"
-                + "IndicesOfPunctuation,"
-                + "IndicesOfPunctuationInTranslation";
-
-        try {
-            File outputfileName = new File("data/translation-with-indices/"
-                    + "11102018-"
-                    + corpusName
-                    + ".csv");
-            System.out.println("The file will be saved in: "
-                    + outputfileName.getPath());
-            FileOutputStream is = new FileOutputStream(outputfileName);
-            OutputStreamWriter osw = new OutputStreamWriter(is, "UTF-8");
-            BufferedWriter w = new BufferedWriter(osw);
-
-            //Write the CSV file header
-            w.append(FILE_HEADER);
-
-            //Add a new line separator after the header
-            w.append(NEW_LINE_SEPARATOR);
-
-            for (CodeSwitchedSentence css : cssList) {
-                try {
-                    w.append(String.valueOf(css.getSentenceId()));
-                    w.append(COMMA_DELIMITER);
-                    String newSentence = css.getCodeSwitchedSentence();
-                    newSentence = newSentence.trim();
-                    w.append(newSentence);
-                    w.append(COMMA_DELIMITER);
-                    w.append(css.getTranslatedSentence());
-                    w.append(COMMA_DELIMITER);
-                    w.append(css.getUntranslatedSentence().toString().replace(",", "_").replace(" ", ""));
-                    w.append(COMMA_DELIMITER);
-                    w.append(css.getIndicesOfCodeSwitchedWord().toString().replace(",", "_").replace(" ", ""));
-                    w.append(COMMA_DELIMITER);
-                    w.append(css.getIndicesOfCodeSwitchedWordInTranslation().toString().replace(",", "_").replace(" ", ""));
-                    w.append(COMMA_DELIMITER);
-                    if (css.getIndicesOfPunctuation().isEmpty()) {
-                        w.append("[]");
-                        w.append(COMMA_DELIMITER);
-                    } else {
-                        w.append(css.getIndicesOfPunctuation().toString().replace(",", "_").replace(" ", ""));
-                        w.append(COMMA_DELIMITER);
-                    }
-                    if (css.getIndicesOfPunctuationInTranslation().isEmpty()) {
-                        w.append("[]");
-                    } else {
-                        w.append(css.getIndicesOfPunctuationInTranslation().toString().replace(",", "_").replace(" ", ""));
-                    }
-                    w.append(NEW_LINE_SEPARATOR);
-
-                } catch (IOException ex) {
-                    Logger.getLogger(TranslationWithIndices.class
-                            .getName()).log(Level.SEVERE, null, ex);
+    //find the translated cs-word in translation
+    public static int findCorrectIndex(String repeatedChineseWord, int firstCSWordIndex, ArrayList<String> wordsInCodeSwitchedSentence, ArrayList<String> wordsInTranslatedSentence) {
+        int result = -1;
+        //ArrayList<Integer> indicesOfRepeatedWordInOriginal = new ArrayList<>();
+        ArrayList<Integer> indicesOfRepeatedWordInTranslation = new ArrayList<>();
+        boolean repeatedChineseWordIsBeforeCSWord = false;
+        for (int i = 0; i < wordsInCodeSwitchedSentence.size(); i++) {
+            //get indices of the repeated word
+            if (wordsInCodeSwitchedSentence.get(i).equals(repeatedChineseWord)) {
+                if (i < firstCSWordIndex) {
+                    repeatedChineseWordIsBeforeCSWord = true;
+                } else {
+                    repeatedChineseWordIsBeforeCSWord = false;
                 }
-            };
-
-            System.out.println("CSV file was created successfully !!!");
-
-            w.flush();
-            w.close();
-            System.out.println("The file has been saved.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Problem writing to the "
-                    + "data/translation-with-indices/"
-                    + "11102018-"
-                    + corpusName
-                    + ".csv");
+            }
         }
+        //fill indicesOfRepeatedWordInTranslation list
+        for (int i = 0; i < wordsInTranslatedSentence.size(); i++) {
+            if (wordsInTranslatedSentence.get(i).equals(repeatedChineseWord)) {
+                indicesOfRepeatedWordInTranslation.add(i);
+            }
+        }
+        //check if indicesOfRepeatedWordInTranslation is empty
+        if (indicesOfRepeatedWordInTranslation.isEmpty()) {
+            return result;
+        }
+        //check if repeated Chinese word is before cs-word
+        if (repeatedChineseWordIsBeforeCSWord) {
+            //assign result to the last index
+            result = indicesOfRepeatedWordInTranslation.get(indicesOfRepeatedWordInTranslation.size() - 1);
+        } else {
+            //assign result to the first index
+            result = indicesOfRepeatedWordInTranslation.get(0);
+        }
+        return result;
     }
 
     public static void saveToCSVFile(List<CodeSwitchedSentence> cssList)
@@ -359,7 +396,7 @@ public class TranslationWithIndices {
 //                    + corpusName
 //                    + ".csv");
             File outputfileName = new File("data/translation-with-indices/"
-                    + "11032019_cs_index_added"
+                    + "11112019_cs_index_added"
                     + ".csv");
             System.out.println("The file will be saved in: "
                     + outputfileName.getPath());
@@ -419,7 +456,7 @@ public class TranslationWithIndices {
             e.printStackTrace();
             System.err.println("Problem writing to the "
                     + "data/translation-with-indices/"
-                    + "11032019_cs_index_added"
+                    + "11112019_cs_index_added"
                     + ".csv");
         }
     }
@@ -446,6 +483,91 @@ public class TranslationWithIndices {
         copyOfWordsInTranslatedSentence.remove(1);
         System.out.println("Size of copy list:" + copyOfWordsInTranslatedSentence.size());
         System.out.println("Size of original list:" + wordsInTranslatedSentence.size());
-
     }
+
+    //    public static void saveToCSVFile(String corpusName, List<CodeSwitchedSentence> cssList)
+//            throws FileNotFoundException, UnsupportedEncodingException {
+//
+//        //Delimiter used in CSV file
+//        final String COMMA_DELIMITER = ",";
+//        final String NEW_LINE_SEPARATOR = "\n";
+//        //CSV file header
+//
+//        final String FILE_HEADER = "SentenceID,"
+//                + "CodeSwitchedSentence,"
+//                + "TranslatedSentence,"
+//                + "UntranslatedWord,"
+//                + "IndicesOfCodeSwitchedWord,"
+//                + "IndicesOfCodeSwitchedWordInTranslation,"
+//                + "IndicesOfPunctuation,"
+//                + "IndicesOfPunctuationInTranslation";
+//
+//        try {
+//            File outputfileName = new File("data/translation-with-indices/"
+//                    + "11102018-"
+//                    + corpusName
+//                    + ".csv");
+//            System.out.println("The file will be saved in: "
+//                    + outputfileName.getPath());
+//            FileOutputStream is = new FileOutputStream(outputfileName);
+//            OutputStreamWriter osw = new OutputStreamWriter(is, "UTF-8");
+//            BufferedWriter w = new BufferedWriter(osw);
+//
+//            //Write the CSV file header
+//            w.append(FILE_HEADER);
+//
+//            //Add a new line separator after the header
+//            w.append(NEW_LINE_SEPARATOR);
+//
+//            for (CodeSwitchedSentence css : cssList) {
+//                try {
+//                    w.append(String.valueOf(css.getSentenceId()));
+//                    w.append(COMMA_DELIMITER);
+//                    String newSentence = css.getCodeSwitchedSentence();
+//                    newSentence = newSentence.trim();
+//                    w.append(newSentence);
+//                    w.append(COMMA_DELIMITER);
+//                    w.append(css.getTranslatedSentence());
+//                    w.append(COMMA_DELIMITER);
+//                    w.append(css.getUntranslatedSentence().toString().replace(",", "_").replace(" ", ""));
+//                    w.append(COMMA_DELIMITER);
+//                    w.append(css.getIndicesOfCodeSwitchedWord().toString().replace(",", "_").replace(" ", ""));
+//                    w.append(COMMA_DELIMITER);
+//                    w.append(css.getIndicesOfCodeSwitchedWordInTranslation().toString().replace(",", "_").replace(" ", ""));
+//                    w.append(COMMA_DELIMITER);
+//                    if (css.getIndicesOfPunctuation().isEmpty()) {
+//                        w.append("[]");
+//                        w.append(COMMA_DELIMITER);
+//                    } else {
+//                        w.append(css.getIndicesOfPunctuation().toString().replace(",", "_").replace(" ", ""));
+//                        w.append(COMMA_DELIMITER);
+//                    }
+//                    if (css.getIndicesOfPunctuationInTranslation().isEmpty()) {
+//                        w.append("[]");
+//                    } else {
+//                        w.append(css.getIndicesOfPunctuationInTranslation().toString().replace(",", "_").replace(" ", ""));
+//                    }
+//                    w.append(NEW_LINE_SEPARATOR);
+//
+//                } catch (IOException ex) {
+//                    Logger.getLogger(TranslationWithIndices.class
+//                            .getName()).log(Level.SEVERE, null, ex);
+//                }
+//            };
+//
+//            System.out.println("CSV file was created successfully !!!");
+//
+//            w.flush();
+//            w.close();
+//            System.out.println("The file has been saved.");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.err.println("Problem writing to the "
+//                    + "data/translation-with-indices/"
+//                    + "11102018-"
+//                    + corpusName
+//                    + ".csv");
+//        }
+//    }
 }

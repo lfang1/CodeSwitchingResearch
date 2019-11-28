@@ -25,11 +25,15 @@ import java.util.LinkedList;
 public class ConllCSVWriter {
 
     private static LinkedList<LinkedList> sentenceList = new LinkedList<>();
-    private static String filename = "03022019_conll2007_all_clean_and_pns_ver_id_line_added";
-    private static HashMap<String, Double> frequencyMap = new HashMap<>();
+    //private static String filename = "03022019_conll2007_all_clean_and_pns_ver_id_line_added";
+    //private static String filename = "11142019_translation_sent_parser_output";
+    private static String filename = "10312019_noncs_ctb_segmentation_fixed_parser_output";
+    private static HashMap<String, Double> chineseFrequencyMap = new HashMap<>();
+    private static HashMap<String, Double> englishFrequencyMap = new HashMap<>();
 
     public static void main(String[] args) {
-        frequencyMap = IndependentProbabilityDatabase.getIndependentProbabilities("55k-chinese-word-independent-probabilities.txt");
+        chineseFrequencyMap = IndependentProbabilityDatabase.getIndependentProbabilities("55k-chinese-word-independent-probabilities.txt");
+        englishFrequencyMap = IndependentProbabilityDatabase.getIndependentProbabilities("55k-english-word-independent-probabilities.txt");
         readTSVFile();
         saveToCSVFile();
     }
@@ -39,7 +43,7 @@ public class ConllCSVWriter {
 
         try {
             //Reading the text file
-            File fileDir = new File("data/conll2007/cs/"
+            File fileDir = new File("data/conll2007/non-cs/input/"
                     + filename
                     + ".txt");
             br = new BufferedReader(
@@ -140,9 +144,9 @@ public class ConllCSVWriter {
                 + "frequency";
 
         try {
-            File outputfileName = new File("data/conll2007/cs/"
+            File outputfileName = new File("data/conll2007/non-cs/output/"
                     + filename
-                    + "_output"
+                    + "_conll2007"
                     + ".csv");
             System.out.println("The file will be saved in: "
                     + outputfileName.getPath());
@@ -166,8 +170,15 @@ public class ConllCSVWriter {
                         w.append(wordDetails[i]);
                         w.append(COMMA_DELIMITER);
                     }
-                    if (frequencyMap.get(wordDetails[3]) != null) {
-                        w.append(String.valueOf(frequencyMap.get(wordDetails[3])));
+//                    if (chineseFrequencyMap.get(wordDetails[3]) != null) {
+//                        w.append(String.valueOf(chineseFrequencyMap.get(wordDetails[3])));
+//                    } else {
+//                        w.append("");
+//                    } 
+                    if (chineseFrequencyMap.get(wordDetails[3]) != null) {
+                        w.append(String.valueOf(chineseFrequencyMap.get(wordDetails[3])));
+                    } else if (englishFrequencyMap.get(wordDetails[3]) != null) {
+                        w.append(String.valueOf(chineseFrequencyMap.get(wordDetails[3])));
                     } else {
                         w.append("");
                     }
@@ -187,7 +198,7 @@ public class ConllCSVWriter {
             System.err.println("Problem writing to the "
                     + "data/conll2007/cs/"
                     + filename
-                    + "_output"
+                    + "_conll2007"
                     + ".csv");
         }
     }

@@ -41,13 +41,13 @@ public class CSDatabaseWriter {
 
         readCleanCorpusFile();
         readTranslationCorpusFile();
-        checkAlignment();
-        saveToCSVFile();
+        //checkAlignment();
+        //saveToCSVFile();
     }
 
     private static void readCleanCorpusFile() {
         BufferedReader br = null;
-        String cleanSentenceFilename = "psu_need_fix_cs";
+        String cleanSentenceFilename = "11132019_all_clean_and_pns_ver_new";
         try {
             //Reading the text file
             File fileDir = new File("data/database/input/"
@@ -58,7 +58,7 @@ public class CSDatabaseWriter {
                             new FileInputStream(fileDir), "UTF8"));
 
             String line = "";
-            br.readLine();
+            
             while ((line = br.readLine()) != null) {
                 String[] sentenceDetails = line.split(",");
                 if (sentenceDetails.length != 11) {
@@ -119,7 +119,13 @@ public class CSDatabaseWriter {
                     if (!indicesOfCSList.contains(String.valueOf(i))) {
                         csType = "0";
                     } else {
-                        csType = typesOfCS[indicesOfCSList.indexOf(String.valueOf(i))];
+                        if(indicesOfCSList.indexOf(String.valueOf(i)) > typesOfCS.length-1) {
+                            System.out.println(sentenceDetails[10] + "_" + sentenceDetails[0]);
+                            System.out.println(indicesOfCSList.toString());
+                        } else {
+                            csType = typesOfCS[indicesOfCSList.indexOf(String.valueOf(i))];
+                        }
+                        //csType = typesOfCS[indicesOfCSList.indexOf(String.valueOf(i))];
                     }
 
                     if (!indicesOfPunctList.contains(String.valueOf(i))) {
@@ -161,7 +167,7 @@ public class CSDatabaseWriter {
 
     private static void readTranslationCorpusFile() {
         BufferedReader br = null;
-        String translationFilename = "psu_need_fix_merged_02052019";
+        String translationFilename = "11142019_translation_sent_parser_output";
         try {
             //Reading the text file
             File fileDir = new File("data/database/input/"

@@ -31,6 +31,37 @@ public class AmericanPhoneNumberDetector {
         else {
             return false;
         }
+    }
+    
+        public static boolean hasPhoneNumber(String s) {
+        //phone numbers of format "1234567890" 
+        Pattern patternOne = Pattern.compile("\\d{10}");
+        Matcher matcherOne = patternOne.matcher(s);
+        //phone number with -, . or spaces
+        Pattern patternTwo = Pattern.compile("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}");
+        Matcher matcherTwo = patternTwo.matcher(s);
+        //phone number with extension length from 3 to 5
+        Pattern patternThree = Pattern.compile("\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}");
+        Matcher matcherThree = patternThree.matcher(s);
+        //phone number where area code is in braces ()
+        Pattern patternFour = Pattern.compile("\\(\\d{3}\\)-\\d{3}-\\d{4}");
+        Matcher matcherFour = patternFour.matcher(s);
+        //check if phone numbers of format "1234567890" found
+        if (matcherOne.find()) {
+            return true;
+        } //check if phone number with -, . or spaces found
+        else if (matcherTwo.find()) {
+            return true;
+        } //check if phone number with extension length from 3 to 5
+        else if (matcherThree.find()) {
+            return true;
+        } //check if phone number where area code is in braces ()
+        else if (matcherFour.find()) {
+            return true;
+        } //return false if nothing matches the input
+        else {
+            return false;
+        }
 
     }
 

@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 public class CodeSwitchedSentence {
 
     private int sentenceId;
+    private String sentenceIdString;
     private String unmarkedWordsInSentence;
     private String codeSwitchedSentence;
     private String translatedSentence;
@@ -93,6 +94,23 @@ public class CodeSwitchedSentence {
         this.indicesOfPunctuation = indicesOfPunctuation;
         this.indicesOfPunctuationInTranslation = indicesOfPunctuationInTranslation;
     }
+    
+    public CodeSwitchedSentence(String sentenceIdString, String codeSwitchedSentence,
+            String translatedSentence, 
+            ArrayList<String> untranslatedSentence,
+            ArrayList<Integer> indicesOfCodeSwitchedWord,
+            ArrayList<Integer> indicesOfCodeSwitchedWordInTranslation,
+            ArrayList<Integer> indicesOfPunctuation,           
+            ArrayList<Integer> indicesOfPunctuationInTranslation) {
+        this.sentenceIdString = sentenceIdString;
+        this.codeSwitchedSentence = codeSwitchedSentence;
+        this.translatedSentence = translatedSentence;
+        this.untranslatedSentence = untranslatedSentence;
+        this.indicesOfCodeSwitchedWord = indicesOfCodeSwitchedWord;
+        this.indicesOfCodeSwitchedWordInTranslation = indicesOfCodeSwitchedWordInTranslation;
+        this.indicesOfPunctuation = indicesOfPunctuation;
+        this.indicesOfPunctuationInTranslation = indicesOfPunctuationInTranslation;
+    }
 
     public CodeSwitchedSentence() {
         this.sentenceId = -1;
@@ -105,6 +123,13 @@ public class CodeSwitchedSentence {
      */
     public int getSentenceId() {
         return sentenceId;
+    }
+    
+    /**
+     * @return the sentenceIdString
+     */
+    public String getSentenceIdString() {
+        return sentenceIdString;
     }
 
     /**

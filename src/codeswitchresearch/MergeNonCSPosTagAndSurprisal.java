@@ -39,12 +39,12 @@ public class MergeNonCSPosTagAndSurprisal {
     public static void main(String[] args) {
         readConllCSVFile();
         readSurprisalCSVFile();
-        readCleanCorpusFile();
+        readCTBSegmentedCorpusFile();
         if (checkAlignment(posTagSentenceIDList, surprisalSentenceIDList)) {
             mergeConllAndSurprisalList();
             System.out.println(mergedList.size() + " list have been merged.");
-            if(checkAlignment(cleanNonCSSentenceIDList, mergedSentenceIDList)) {
-//                saveToCSVFile();
+            if (checkAlignment(cleanNonCSSentenceIDList, mergedSentenceIDList)) {
+                saveToCSVFile();
             }
         }
     }
@@ -67,7 +67,7 @@ public class MergeNonCSPosTagAndSurprisal {
                 System.arraycopy(conllSentenceList.get(w), 0, appended, 0, conllSentenceList.get(w).length);
                 appended[8] = surprisalSentenceList.get(w)[4];
                 mergedSentenceList.add(appended);
-                
+
 //                System.out.println(appended[0] + appended[1]);
 ////                for(String s : appended) {
 ////                    System.out.println(s);
@@ -103,10 +103,10 @@ public class MergeNonCSPosTagAndSurprisal {
 
     private static void readConllCSVFile() {
         BufferedReader br = null;
-        String filename = "03012019_conll2007_all_clean_non_cs_id_line_added_output";
+        String filename = "10312019_noncs_ctb_segmentation_fixed_parser_output_conll2007";
         try {
             //Reading the text file
-            File fileDir = new File("data/conll2007/non-cs/"
+            File fileDir = new File("data/conll2007/non-cs/output/"
                     + filename
                     + ".csv");
             br = new BufferedReader(
@@ -124,10 +124,10 @@ public class MergeNonCSPosTagAndSurprisal {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (line.contains("END") && columns.length == 1) {
-                    System.out.println("Reach the end of the file.");
-                    break;
-                }
+//                if (line.contains("END") && columns.length == 1) {
+//                    System.out.println("Reach the end of the file.");
+//                    break;
+//                }
                 //If the line is not empty
                 if (columns.length != 1) {
 //                    System.out.println("line: " + line + " with length " + columns.length);
@@ -168,7 +168,7 @@ public class MergeNonCSPosTagAndSurprisal {
 
     private static void readSurprisalCSVFile() {
         BufferedReader br = null;
-        String filename = "03012019_all_clean_non_cs_id_line_added_surp_output";
+        String filename = "10312019_noncs_ctb_segmentation_fixed_surprisal_ngrams";
         try {
             //Reading the text file
             File fileDir = new File("data/surprisal/output/non-cs/"
@@ -189,10 +189,10 @@ public class MergeNonCSPosTagAndSurprisal {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (line.contains("END") && columns.length == 1) {
-                    System.out.println("Reach the end of the file.");
-                    break;
-                }
+//                if (line.contains("END") && columns.length == 1) {
+//                    System.out.println("Reach the end of the file.");
+//                    break;
+//                }
                 //If the line is not empty
                 if (columns.length != 1) {
 //                    System.out.println("line: " + line + " with length " + columns.length);
@@ -222,6 +222,75 @@ public class MergeNonCSPosTagAndSurprisal {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void readCTBSegmentedCorpusFile() {
+        BufferedReader br = null;
+        String ctbSegmentedNonCSSentenceFilename = "10312019_noncs_ctb_segmentation_output_fixed";
+        try {
+            //Reading the text file
+            File fileDir = new File("data/validation/"
+                    + ctbSegmentedNonCSSentenceFilename
+                    + ".txt");
+            br = new BufferedReader(
+                    new InputStreamReader(
+                            new FileInputStream(fileDir), "UTF8"));
+
+            String line = "";
+            boolean isSentence = false;
+            String sentenceID = "";
+            String source = "";
+            PunctuationList punctList = new PunctuationList();
+            //read until the end of file is reached
+            while ((line = br.readLine()) != null) {
+                if (isSentence) {
+                    String wordID = "";
+                    String wordForm = "";
+                    String punctSwitch = "";
+                    LinkedList<String[]> wordList = new LinkedList<>();
+                    String[] wordsInSentence = line.split("\\s+");
+                    LinkedList<String> punctSwitchWordList = new LinkedList<>();
+                    for (int i = 0; i < wordsInSentence.length; i++) {
+                        wordID = String.valueOf(i + 1);
+                        wordForm = wordsInSentence[i];
+                        if (punctList.isChinesePunctuation(wordForm)
+                                || punctList.isEnglishPunctuation(wordForm)) {
+                            punctSwitch = "1";
+                        } else {
+                            punctSwitch = "0";
+                        }
+
+                        String[] wordDetails = new String[]{source, sentenceID,
+                            wordID, wordForm, punctSwitch};
+                        wordList.add(wordDetails);
+                        punctSwitchWordList.add(punctSwitch);
+                    }
+
+                    cleanNonCSSentenceList.add(wordList);
+                    cleanNonCSSentenceIDList.add(source + sentenceID);
+                    punctSwitchList.add(punctSwitchWordList);
+                    wordList = new LinkedList<>();
+                    punctSwitchWordList = new LinkedList<>();
+
+                    isSentence = false;
+                    source = "";
+                    sentenceID = "";
+
+                } else {
+                    String[] sentenceInfo = line.split("_");
+                    sentenceID = sentenceInfo[1];
+                    source = sentenceInfo[0];
+                    isSentence = true;
+                }
+            }
+            System.out.println(cleanNonCSSentenceList.size() + " clean non-cs sentences added.");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(MergeNonCSPosTagAndSurprisal.class.getName()).log(Level.SEVERE, null, ex);
@@ -301,7 +370,7 @@ public class MergeNonCSPosTagAndSurprisal {
         //Delimiter used in CSV file
         final String COMMA_DELIMITER = ",";
         final String NEW_LINE_SEPARATOR = "\n";
-        final String outFilename = "03022019_bilingual_non_cs_database_v1";
+        final String outFilename = "11152019_bilingual_non_cs_database_v1";
         //CSV file header
         final String FILE_HEADER = "source,"
                 + "sentence id,"

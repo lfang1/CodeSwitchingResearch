@@ -36,7 +36,8 @@ public class AddLocation {
     public static void readCSVFile() {
         BufferedReader br = null;
         String line = "";
-        String inputFilename = "03082019_appended_input_R_v2";
+        //String inputFilename = "03082019_appended_input_R_v2";
+        String inputFilename = "11152019_appended_input_R_v4_new_15_11_2019";
         File fileDir = new File("data/add_location/input/"
                 + inputFilename
                 + ".csv");
@@ -50,13 +51,13 @@ public class AddLocation {
 
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (columns.length < 21 || columns.length > 23) {
+                if (columns.length < 22 || columns.length > 24) {
                     System.out.println("Wrong length: " + columns.length);
                 } else {
-                    String[] wordsInTranslation = columns[4].split("\\s+");
+                    String[] wordsInTranslation = columns[5].split("\\s+");
                     int sentenceLength = wordsInTranslation.length;
                     //Start at 1
-                    int csWordID = Integer.valueOf(columns[5]);
+                    int csWordID = Integer.valueOf(columns[6]);
 
                     String oneTwoOne = "";
                     String oneEightOne = "";
@@ -98,19 +99,19 @@ public class AddLocation {
                         firstMiddleLast = "2";
                     }
 
-                    String[] appended = new String[28];
+                    String[] appended = new String[29];
                     System.arraycopy(columns, 0, appended, 0, columns.length);
-                    if (appended[21] == null) {
-                        appended[21] = "";
-                    }
                     if (appended[22] == null) {
                         appended[22] = "";
                     }
-                    appended[23] = oneTwoOne;
-                    appended[24] = oneEightOne;
-                    appended[25] = threeFourThree;
-                    appended[26] = firstMiddleLast;
-                    appended[27] = String.valueOf(sentenceLength);
+                    if (appended[23] == null) {
+                        appended[23] = "";
+                    }
+                    appended[24] = oneTwoOne;
+                    appended[25] = oneEightOne;
+                    appended[26] = threeFourThree;
+                    appended[27] = firstMiddleLast;
+                    appended[28] = String.valueOf(sentenceLength);
                     sentenceList.add(appended);
                 }
             }
@@ -136,11 +137,12 @@ public class AddLocation {
             //Delimiter used in CSV file
             final String COMMA_DELIMITER = ",";
             final String NEW_LINE_SEPARATOR = "\n";
-            final String outputFilename = "location_appended_input_R_v2";
+            final String outputFilename = "11152019_location_appended_input_R_v4_new_15_11_2019";
             //CSV file header
             final String FILE_HEADER = "sent_type,"
                     + "university,"
                     + "sent_id,"
+                    + "aligned_to,"
                     + "original_sentence,"
                     + "translation,"
                     + "word_id,"
@@ -167,7 +169,6 @@ public class AddLocation {
                     + "first_middle_last_location,"
                     + "translation_sentence_length";
             File outputDir = new File("data/add_location/output/"
-                    + "03082019_"
                     + outputFilename
                     + ".csv");
             System.out.println("The file will be saved in: "

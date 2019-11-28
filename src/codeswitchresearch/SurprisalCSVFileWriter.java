@@ -28,11 +28,10 @@ import java.util.regex.Pattern;
  * @author Le
  */
 public class SurprisalCSVFileWriter {
-
     private static LinkedList<CodeSwitchedSentence> csSentences = new LinkedList<>();
     private static LinkedList<SurprisalsOfASentence>  surprisalList = new LinkedList<>();
-    private static String filename = "cs/03022019_all_clean_cs_id_line_added_surp";
-
+    private static String filename = "non-cs/10312019_noncs_ctb_segmentation_fixed_surprisal";
+    
     public static void main(String args[]) throws FileNotFoundException, UnsupportedEncodingException {
         readSurprisalCSVFile();
         saveToCSVFile();
@@ -52,7 +51,7 @@ public class SurprisalCSVFileWriter {
         //If not, use this pattern
         Pattern propPattern = Pattern.compile("^\\sp\\((.*|.*)\\)");
         Pattern surprisalPattern = Pattern.compile("\\[\\s-?\\d+\\.?\\d*\\s\\]$");
-
+        int lastSentenceId = -1;
         try {
             //Reading the csv file
             //Before run this file,  please update the path of the csv file
@@ -179,13 +178,13 @@ public class SurprisalCSVFileWriter {
                         }
                     } else {
                         if (isSentenceID) {
-                            
                             String[] tokens = sentenceDetails[0].split("_");
                             source = tokens[0];
                             sentenceId = Integer.parseInt(tokens[1]);
                             //System.out.println(tokens[0] + ": " + tokens[1]);
                             sentenceCounter++;
                             isSentenceID = false;
+                            lastSentenceId = sentenceId;
                         } 
                     }
                 } else {
@@ -210,6 +209,7 @@ public class SurprisalCSVFileWriter {
 //                System.out.println("surprisals of words: " + v.getSurprisalsInSentence().toString());
 //            });
         } catch (Exception ee) {
+            System.out.println(lastSentenceId);
             ee.printStackTrace();
         } finally {
             try {
@@ -237,7 +237,7 @@ public class SurprisalCSVFileWriter {
         try {
             File outputfileName = new File("data/surprisal/output/"
                     + filename
-                    + "_output"
+                    + "_ngrams"
                     + ".csv");
             System.out.println("The file will be saved in: "
                     + outputfileName.getPath());
@@ -280,9 +280,9 @@ public class SurprisalCSVFileWriter {
 
         } catch (IOException e) {
             System.err.println("Problem writing to the "
-                    + "data/surprisal/output/"
+                    + "data/surprisal/output/non-cs/"
                     + filename
-                    + "_output"
+                    + "_ngrams"
                     + ".csv");
         }
     }

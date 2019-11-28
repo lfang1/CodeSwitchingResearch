@@ -63,7 +63,7 @@ public class MergeCSPosTagAndSurprisal {
 
     private static void readCleanCorpusFile() {
         BufferedReader br = null;
-        String cleanSentenceFilename = "all_clean_and_pns_ver";
+        String cleanSentenceFilename = "11132019_all_clean_and_pns_ver_new";
         try {
             //Reading the text file
             File fileDir = new File("data/database/input/"
@@ -74,7 +74,7 @@ public class MergeCSPosTagAndSurprisal {
                             new FileInputStream(fileDir), "UTF8"));
 
             String line = "";
-            br.readLine();
+            //br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] sentenceDetails = line.split(",");
                 if (sentenceDetails.length != 11) {
@@ -240,10 +240,11 @@ public class MergeCSPosTagAndSurprisal {
 
     private static void readConllCSVFile() {
         BufferedReader br = null;
-        String filename = "cs/03022019_conll2007_all_clean_and_pns_ver_id_line_added_output";
+        //String filename = "cs/03022019_conll2007_all_clean_and_pns_ver_id_line_added_output";
+        String filename = "11142019_translation_sent_parser_output_conll2007";
         try {
             //Reading the text file
-            File fileDir = new File("data/conll2007/"
+            File fileDir = new File("data/conll2007/cs/output/"
                     + filename
                     + ".csv");
             br = new BufferedReader(
@@ -261,10 +262,10 @@ public class MergeCSPosTagAndSurprisal {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (line.contains("END") && columns.length == 1) {
-                    System.out.println("Reach the end of the file.");
-                    break;
-                }
+//                if (line.contains("END") && columns.length == 1) {
+//                    System.out.println("Reach the end of the file.");
+//                    break;
+//                }
                 //If the line is not empty
                 if (columns.length != 1) {
 //                    System.out.println("line: " + line + " with length " + columns.length);
@@ -272,7 +273,8 @@ public class MergeCSPosTagAndSurprisal {
                         String[] wordDetails = new String[8];
                         wordDetails[0] = source;
                         wordDetails[1] = sentenceID;
-                        wordDetails[2] = String.valueOf(Integer.parseInt(columns[0]));
+                        //word id start at 1
+                        wordDetails[2] = String.valueOf(Integer.parseInt(columns[0]) + 1);
                         for (int i = 1; i < columns.length; i++) {
                             wordDetails[i + 2] = columns[i];
                         }
@@ -305,10 +307,10 @@ public class MergeCSPosTagAndSurprisal {
 
     private static void readSurprisalCSVFile() {
         BufferedReader br = null;
-        String filename = "cs/03022019_all_clean_cs_id_line_added_surp_output";
+        String filename = "11142019_translation_sent_surprisal_output_ngrams";
         try {
             //Reading the text file
-            File fileDir = new File("data/surprisal/output/"
+            File fileDir = new File("data/surprisal/output/cs/"
                     + filename
                     + ".csv");
             br = new BufferedReader(
@@ -326,10 +328,10 @@ public class MergeCSPosTagAndSurprisal {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (line.contains("END") && columns.length == 1) {
-                    System.out.println("Reach the end of the file.");
-                    break;
-                }
+//                if (line.contains("END") && columns.length == 1) {
+//                    System.out.println("Reach the end of the file.");
+//                    break;
+//                }
                 //If the line is not empty
                 if (columns.length != 1) {
 //                    System.out.println("line: " + line + " with length " + columns.length);
@@ -369,7 +371,7 @@ public class MergeCSPosTagAndSurprisal {
         //Delimiter used in CSV file
         final String COMMA_DELIMITER = ",";
         final String NEW_LINE_SEPARATOR = "\n";
-        final String outFilename = "03022019_bilingual_cs_database_v1";
+        final String outFilename = "11152019_bilingual_cs_database_v1";
         //CSV file header
         final String FILE_HEADER = "source,"
                 + "sentence id,"
@@ -475,7 +477,7 @@ public class MergeCSPosTagAndSurprisal {
             ie.printStackTrace();
             System.err.println("Problem writing to the "
                     + "data/database/output/"
-                    + "02052019_"
+                    + "11152019_"
                     + outFilename
                     + ".csv");
         }
