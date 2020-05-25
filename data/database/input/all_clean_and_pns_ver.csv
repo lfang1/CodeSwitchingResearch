@@ -1,4 +1,4 @@
-﻿sentene ID,original,translation,untranslated,indicesOfCS,indicesOfCSIntranslation,punctOrignal,punctTranslation,cs type,sentence type,source
+sentene ID,original,translation,untranslated,indicesOfCS,indicesOfCSIntranslation,punctOrignal,punctTranslation,cs type,sentence type,source
 1,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 queen size 的 床 和 一 个 气垫 床 ；,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 大号 的 床 和 一 个 气垫 床 ；,[],[25_26],[25],[1_9_15_18_21_34],[1_9_15_18_21_33],CS_CS,clean_code_switch,CMU
 2,rich neighborhood ， 非常 安全 （ 这里 属于 富人 区 ） ， 旁边 就 是 公园 ， 附近 还有 配套 的 各 种 球场 和 社区 设施 ， 环境 很 好 很 安静 。,富人 区 ， 非常 安全 （ 这里 属于 富人 区 ） ， 旁边 就 是 公园 ， 附近 还有 配套 的 各 种 球场 和 社区 设施 ， 环境 很 好 很 安静 。,[],[0_1_2],[0_1_2],[2_5_10_11_16_27_33],[2_5_10_11_16_27_33],CS_CS_CS,clean_code_switch,CMU
 4,lease 从 八月 开始 ， 具体 日期 可以 商量 。,租约 从 八月 开始 ， 具体 日期 可以 商量 。,[],[0],[0],[4_9],[4_9],CS,clean_code_switch,CMU

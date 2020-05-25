@@ -1,0 +1,12 @@
+TASK2_CONTROL_1,good,idiomatic_expression,爱屋及乌,Love me， love my dog.
+TASK2_CONTROL_2,good,idiomatic_expression,百闻不如一见,Seeing is believing.
+TASK2_CONTROL_3,good,idiomatic_expression,活到老学到老,One is never too old to learn.
+TASK2_CONTROL_4,good,classifier,code-switch,PIT_561,饭厅 有 两 张 书桌 ， 房间 有 一 张 king size bed 。,饭厅 有 两 张 书桌 ， 房间 有 一 张 超 大号 床 。
+TASK2_CONTROL_5,good,classifier,code-switch,PSU_72,本人 第二 年 的 phd ， 有 一 只 超级 可爱 的 小 母 猫 ， 我 自己 话 不 多 ， 但是 遇到 投缘 的 人 或者 事情 ， 话 可以 很多 。,本人 第二 年 的 博士 ， 有 一 只 超级 可爱 的 小 母 猫 ， 我 自己 话 不 多 ， 但是 遇到 投缘 的 人 或者 事情 ， 话 可以 很多 。
+TASK2_CONTROL_6,good,classifier,code-switch,PSU_1261,同时 住 的 安静 ， 不 想 social 也 可以 过 一 个 安静 祥和 的 暑假 。,同时 住 的 安静 ， 不 想 社会 也 可以 过 一 个 安静 祥和 的 暑假 。
+TASK2_CONTROL_7,bad,classifier,code-switch,PSU_1272,厨房 有 一 个 早餐 bar 。,厨房 有 一 朵 早餐 酒吧 。
+TASK2_CONTROL_8,bad,classifier,code-switch,PSU_1685,一般 一 个 月 需 多少 money ？,一般 一 条 月 需 多少 钱 ？
+TASK2_CONTROL_9,bad,classifier,code-switch,PIT_2,小 蜡烛 一 盒 a box of little candles $2,小 蜡烛 一 头 一 小盒 蜡烛 $2
+TASK2_CONTROL_10,bad,replace_cs_word,code-switch,PSU_320,爱 干净 ， 不 吵闹 ， 不 开 party 。,爱 干净 ， 不 吵闹 ， 不 开 晚餐 。
+TASK2_CONTROL_11,bad,replace_cs_word,code-switch,CMU_862,匹兹堡 独 栋 house 两 间 卧室 出租 。,匹兹堡 独 栋 商城 两 间 卧室 出租 。
+TASK2_CONTROL_12,bad,replace_cs_word,code-switch,PIT_750,房东人 很 nice 。,房东人 很 大 。

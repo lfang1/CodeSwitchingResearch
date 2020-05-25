@@ -1,0 +1,24 @@
+CONTROL_1,bad,replace_cs_word,适合朋友或单身居住。,适合couple或单身居住。,code-switch,CMU_53
+CONTROL_2,bad,replace_cs_word,爱干净，不吵闹，不开晚餐。,爱干净，不吵闹，不开party。,code-switch,PSU_320
+CONTROL_3,bad,replace_cs_word,匹兹堡独栋商城两间卧室出租。,匹兹堡独栋house两间卧室出租。,code-switch,CMU_862
+CONTROL_4,bad,replace_cs_word,房东人很大。,房东人很nice。,code-switch,PIT_750
+CONTROL_5,bad,replace_cs_word,适合朋友或单身居住。,适合couple或单身居住。,code-switch,CMU_53
+CONTROL_6,bad,replace_cs_word,房东非常无敌帅还会帮忙丢垃圾！,房东非常无敌nice还会帮忙丢垃圾！,code-switch,CMU_26
+CONTROL_7,bad,replace_cs_word,暑期短租还有漂亮的哦。,暑期短租还available哦。,code-switch,CMU_33
+CONTROL_8,bad,replace_cs_word,入住时间美丽，可长期入住。,入住时间flexible，可长期入住。,code-switch,CMU_14
+CONTROL_9,bad,classifier,希望是工作室，或是一条卧室。,希望是studio，或是one bedroom.,code-switch,PSU_1550
+CONTROL_10,bad,classifier,具体户型可参考如下图片中的两只卧室的常规。,具体户型可参考如下图片中的two bed room traditional。,code-switch,PSU_403
+CONTROL_11,bad,classifier,备注写：五根人的车。,备注写：ride for five。,code-switch,PSU_1169
+CONTROL_12,bad,classifier,一根露天购物经历。,an open-air shopping 经历。,code-switch,CMU_76
+CONTROL_13,good,correct_translation,半山独栋别墅，自带车库和私人车道。,半山独栋别墅，自带车库和driveway。,code-switch,CMU_18
+CONTROL_14,good,correct_translation,对比其他地方，可能和很多人共用，并且还很贵！,对比其他地方，可能和很多人share，并且还很贵！,code-switch,CMU_25
+CONTROL_15,good,correct_translation,长租全部租出！,长租all gone！,code-switch,CMU_31
+CONTROL_16,good,correct_translation,房间是一套房子的顶层，非常宽敞。,房间是一栋house的顶层，非常宽敞。,code-switch,CMU_89
+CONTROL_17,good,correct_translation,客厅超大，步入式衣柜也很大。,客厅超大，walk-in closet也很大。,code-switch,CMU_93
+CONTROL_18,good,correct_translation,整个公寓总共两人共用，两人比较好协调。,整个公寓总共两人share，两人比较好协调。,code-switch,CMU_108
+CONTROL_19,good,correct_translation,房型：房屋一层与二层完全独立。,房型：house一层，与二层完全独立。,code-switch,CMU_125
+CONTROL_20,good,correct_translation,餐厅和露台之前是全景玻璃门。,餐厅和deck之前是全景玻璃门。,code-switch,CMU_134
+CONTROL_21,good,correct_translation,且在寒冷的匹兹堡包含所有暖气费！,且在寒冷的匹兹堡cover所有暖气费！,code-switch,CMU_145
+CONTROL_22,good,correct_translation,可以共用大部分家用电器，厨房用品，家具等。,可以share大部分家用电器，厨房用品，家具等。,code-switch,CMU_185
+CONTROL_23,good,correct_translation,门口有公交到中国店等。,门口有bus到中国店等。,code-switch,CMU_162
+CONTROL_24,good,correct_translation,经理很好，有问题会及时给解决。,manager很nice，有问题会及时给解决。,code-switch,CMU_211

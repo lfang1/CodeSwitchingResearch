@@ -1,0 +1,12 @@
+TASK1_CONTROL_1,good,idiomatic_expression,爱屋及乌,Love me， love my dog.
+TASK1_CONTROL_2,good,idiomatic_expression,百闻不如一见,Seeing is believing.
+TASK1_CONTROL_3,good,idiomatic_expression,活到老学到老,One is never too old to learn.
+TASK1_CONTROL_4,good,classifier,non-code-switch,CMU_3946,屋里 家具 ： 一 张 床 ， 书桌 台灯 及 椅子 ， 自 带 书柜 ， 独立 衣帽间 。
+TASK1_CONTROL_5,good,classifier,non-code-switch,PSU_3721,我 有 一 只 狗 狗 。
+TASK1_CONTROL_6,good,classifier,non-code-switch,CMU_4232,目前 餐厅 部分 已经 被 一 位 女生 预约 。
+TASK1_CONTROL_7,bad,idiomatic_expression,破釜沉船,cut off all means of retreat
+TASK1_CONTROL_8,bad,idiomatic_expression,人逢喜事精神乐,Joy puts heart into a man.
+TASK1_CONTROL_9,bad,idiomatic_expression,不打不成功,No discord， no concord.
+TASK1_CONTROL_10,bad,classifier,non-code-switch,CMU_5570,厨房 面积 大 ， 还 有 一 辆 小 的 吧台 。
+TASK1_CONTROL_11,bad,classifier,non-code-switch,CMU_5119,补充 几 头 客厅 ， 厨房 的 照片 。
+TASK1_CONTROL_12,bad,classifier,non-code-switch,PSU_2728,诚意 求购 自行车 一 条 ， 好 骑 ， 刹车 正常 。

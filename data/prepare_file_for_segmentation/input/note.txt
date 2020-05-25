@@ -1,0 +1,3 @@
+03022019_all_clean_and_pns_ver_id_line_added.txt
+It contains "﻿1"  two characters, "﻿" is invisible. I am not sure where "﻿" comes from but I removed "﻿" in every output result.
+was copied from C:\Users\Le\Documents\NetBeansProjects\CodeSwitchResearch\data\add-id-line\output

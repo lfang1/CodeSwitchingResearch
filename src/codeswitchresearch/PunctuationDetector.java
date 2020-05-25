@@ -8,7 +8,6 @@ package codeswitchresearch;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
  *

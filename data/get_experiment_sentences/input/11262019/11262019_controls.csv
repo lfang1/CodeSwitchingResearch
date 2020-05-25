@@ -1,0 +1,8 @@
+CONTROL_1,good,time,现在是2018年8月28日下午五点三十分。,It is five thirty in the afternoon on August 28， 2018.
+CONTROL_2,good,time,刚才是1999年6月15日上午九点二十分。,It was nine twenty in the morning on June 15， 1999.
+CONTROL_3,good,space,江南省江湖市中山区民主街1号国立大学外国语学院英语系110办公室,Room 110， Department of English， School of Foreign Languages， National University， No.1 Minzhu Street， Zhongshan District， Jianghu， Jiangnan
+CONTROL_4,good,space,山北省黑虎市红星区胜利街8号光明大厦5楼,5th floor， Guangming Building， No.8 Shengli Street， Hongxing District， Heihu， Shanbei
+CONTROL_5,bad,time,现在是二点五十分下午11月9日2005年。,It is two fifty in the afternoon on November 9， 2005.
+CONTROL_6,bad,time,刚才是七点二十分上午5月3日2016年。,It was seven twenty in the morning on May 3， 2016.
+CONTROL_7,bad,space,205室二单元三栋天天小区天宏街20号天河区燕京市广南省,Room 205， Unit 2， Building 3， The Tiantian Complex， No.20 Tianhong Street，Tianhe District， Yanjing， Guangnan
+CONTROL_8,bad,space,501办公室数学系科学院中央大学求学路10号学园区湖西市三江省,Room 501， Department of Mathematics， School of Sciences， Central University， No.10 Qiuxue Road， Xueyuan District， Huxi， Sanjiang

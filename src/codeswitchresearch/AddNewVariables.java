@@ -5,7 +5,6 @@
  */
 package codeswitchresearch;
 
-import codeswitchresearch.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,7 +27,6 @@ import java.util.logging.Logger;
  */
 public class AddNewVariables {
 
-//    static String inputFilename = "input_R_v2";
     private static String inputFilename = "input_R_v4_new_15_11_2019";
     private static LinkedList<String[]> sentenceList = new LinkedList<>();
     private static ArrayList<String> chinesePunctuationList = new ArrayList<>();

@@ -1,0 +1,8 @@
+CONTROL_1,bad,time,现在是二点五十分下午11月9日2005年。
+CONTROL_2,bad,time,刚才是七点二十分上午5月3日2016年。
+CONTROL_3,bad,space,205室二单元三栋天天小区天宏街20号天河区燕京市广南省
+CONTROL_4,bad,space,501办公室数学系科学院中央大学求学路10号学园区湖西市三江省
+CONTROL_5,bad,classifier,希望 是 工作室 ， 或是 一 条 卧室 。,code-switch,PSU_1550
+CONTROL_6,bad,classifier,具体 户型 可 参考 如下 图片 中 的 两 只 卧室 的 常规 。,code-switch,PSU_403
+CONTROL_7,bad,classifier,备注 写 ： 五 匹 人 的 车 。,code-switch,PSU_1169
+CONTROL_8,bad,classifier,一 根 露天 购物 经历 。,code-switch,CMU_76

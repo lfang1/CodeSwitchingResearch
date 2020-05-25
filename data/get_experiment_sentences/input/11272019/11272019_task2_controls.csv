@@ -1,0 +1,8 @@
+CONTROL_1,bad,replace_cs_word,适合 朋友 或 单身 居住 。,适合 couple 或 单身 居住 。,code-switch,CMU_53
+CONTROL_2,bad,replace_cs_word,爱 干净 ， 不 吵闹 ， 不 开 晚餐 。,爱 干净 ， 不 吵闹 ， 不 开 party 。,code-switch,PSU_320
+CONTROL_3,bad,replace_cs_word,匹兹堡 独 栋 商城 两 间 卧室 出租 。,匹兹堡 独 栋 house 两 间 卧室 出租 。,code-switch,CMU_862
+CONTROL_4,bad,replace_cs_word,房东人 很 大 。,房东人 很 nice 。,code-switch,PIT_750
+CONTROL_5,bad,classifier,希望 是 工作室 ， 或是 一 条 卧室 。,希望 是 studio ， 或是 one bedroom .,code-switch,PSU_1550
+CONTROL_6,bad,classifier,具体 户型 可 参考 如下 图片 中 的 两 只 卧室 的 常规 。,具体 户型 可 参考 如下 图片 中 的 two bedroom traditional 。,code-switch,PSU_403
+CONTROL_7,bad,classifier,备注 写 ： 五 匹 人 的 车 。,备注 写 ： ride for five 。,code-switch,PSU_1169
+CONTROL_8,bad,classifier,一 根 露天 购物 经历 。,an open-air shopping 经历 。,code-switch,CMU_76

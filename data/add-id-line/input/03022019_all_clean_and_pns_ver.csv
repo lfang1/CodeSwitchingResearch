@@ -1,4 +1,5 @@
-﻿1,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 queen size 的 床 和 一 个 气垫 床 ；,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 大号 的 床 和 一 个 气垫 床 ；,[],[25_26],[25],[1_9_15_18_21_34],[1_9_15_18_21_33],CS_CS,clean_code_switch,CMU
+sentene ID,original,translation,untranslated,indicesOfCS,indicesOfCSIntranslation,punctOrignal,punctTranslation,cs type,sentence type,source
+1,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 queen size 的 床 和 一 个 气垫 床 ；,房间 ： 房间 为 三 层 一 整 层 ， 由 阁楼 装修 而 成 ， 空间 很大 ， 家具 齐全 ， 有 一 张 大号 的 床 和 一 个 气垫 床 ；,[],[25_26],[25],[1_9_15_18_21_34],[1_9_15_18_21_33],CS_CS,clean_code_switch,CMU
 2,rich neighborhood ， 非常 安全 （ 这里 属于 富人 区 ） ， 旁边 就 是 公园 ， 附近 还有 配套 的 各 种 球场 和 社区 设施 ， 环境 很 好 很 安静 。,富人 区 ， 非常 安全 （ 这里 属于 富人 区 ） ， 旁边 就 是 公园 ， 附近 还有 配套 的 各 种 球场 和 社区 设施 ， 环境 很 好 很 安静 。,[],[0_1_2],[0_1_2],[2_5_10_11_16_27_33],[2_5_10_11_16_27_33],CS_CS_CS,clean_code_switch,CMU
 4,lease 从 八月 开始 ， 具体 日期 可以 商量 。,租约 从 八月 开始 ， 具体 日期 可以 商量 。,[],[0],[0],[4_9],[4_9],CS,clean_code_switch,CMU
 5,house 一共 有 两 层 + 地下室 。,房子 一共 有 两 层 + 地下室 。,[],[0],[0],[5_7],[5_7],CS,clean_code_switch,CMU
@@ -248,7 +249,7 @@
 526,客厅 非常 安静 ， 适合 学习 ， 厅 内 另 有 一 个 walk-in closet 可以 用 。,客厅 非常 安静 ， 适合 学习 ， 厅 内 另 有 一 个 步入 式 衣柜 可以 用 。,[],[14],[13_14_15],[3_6_17],[3_6_18],CS,clean_code_switch,CMU
 527,卧室 ： 出租 卧室 ， 有 一 女生 住 客厅 ， 人 极 nice ， 非常 好 相处 。,卧室 ： 出租 卧室 ， 有 一 女生 住 客厅 ， 人 极 好 ， 非常 好 相处 。,[],[13_14],[13_14],[1_4_10_14_18],[1_4_10_14_18],CS_CS,clean_code_switch,CMU
 528,一月 起 available 。,一月 起 可 租 。,[],[2_3],[2_3_4],[3],[4],CS_CS,clean_code_switch,CMU
-529,- free parking or paid garage 联系 方式 ： pn-8 em@33,免费 停车场 或 付费 车库 联系 方式 ： pn-8 em@33,[],[0_1_2_3_4_5],[0_1_2_3_4],[0_8],[7],CS_CS_CS_CS_CS_CS,clean_code_switch,CMU
+529,- free parking or paid garage 联系 方式 ： pn-8 em@33,免费 停车场 或 付费 车库 联系 方式 ： pn-8 em@33,[],[1_2_3_4_5],[0_1_2_3_4],[0_8],[7],CS_CS_CS_CS_CS,clean_code_switch,CMU
 531,两 个 houses : house＃1&＃2house＃1 : 代 朋友 发 。,两 个 房子 ： 代 朋友 发 。,[],[2_3_4_5],[2_3],[3_5_9],[3_7],CS_CS_CS_CS,clean_code_switch,CMU
 532,utility 和 网络 全 包 。,各 类 服务费 和 网络 全 包 。,[],[0],[0_1_2],[5],[7],CS,clean_code_switch,CMU
 534,租约 ： 整套 公寓 一 室 一 厅 1005$/month （ 不 包 网 电 ） ， 420$/month for living room ， 585$/month for bedroom 。,租约 ： 整套 公寓 一 室 一 厅 1005$/ 每 月 （ 不 包 网 电 ） ， 客厅 420$ / 每 月 ， 卧室 585$/ 每 月 。,[],[17_18_19_20_21_22_23_24],[9_10_11_18_19_20_21_22_23_24_25_26_27_28],[1_9_14_15_20_24],[1_11_16_17_20_23_28],CS_CS_CS_CS_CS_CS_CS_CS,clean_code_switch,CMU

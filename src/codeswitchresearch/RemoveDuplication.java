@@ -16,7 +16,7 @@ import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
 /**
- *
+ * Remove duplicated sentences in the bilingual corpus.
  * @author Le
  */
 public class RemoveDuplication {

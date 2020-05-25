@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * More accurately identify indices of punctuation, Chinese words, and code-switched words.
  * @author Le
  */
 public class RefineCorpus {

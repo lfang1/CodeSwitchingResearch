@@ -5,7 +5,6 @@
  */
 package codeswitchresearch;
 
-import codeswitchresearch.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,7 +35,6 @@ public class AddLocation {
     public static void readCSVFile() {
         BufferedReader br = null;
         String line = "";
-        //String inputFilename = "03082019_appended_input_R_v2";
         String inputFilename = "11152019_appended_input_R_v4_new_15_11_2019";
         File fileDir = new File("data/add_location/input/"
                 + inputFilename

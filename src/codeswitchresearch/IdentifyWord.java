@@ -8,11 +8,10 @@ package codeswitchresearch;
 import codeswitchresearch.IndependentProbabilityDatabase;
 import codeswitchresearch.PunctuationDetector;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Identify the type of a String.
  * @author Le
  */
 public class IdentifyWord {

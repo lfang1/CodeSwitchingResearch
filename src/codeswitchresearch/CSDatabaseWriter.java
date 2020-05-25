@@ -5,7 +5,6 @@
  */
 package codeswitchresearch;
 
-import codeswitchresearch.IndependentProbabilityDatabase;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,8 +16,6 @@ import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -240,7 +237,7 @@ public class CSDatabaseWriter {
         //Delimiter used in CSV file
         final String COMMA_DELIMITER = ",";
         final String NEW_LINE_SEPARATOR = "\n";
-        final String outFilename = "psu_need_fix_02052019_v1";
+        final String outFilename = "testFile_v1";
         //CSV file header
         final String FILE_HEADER = "source,"
                 + "sentence id,"

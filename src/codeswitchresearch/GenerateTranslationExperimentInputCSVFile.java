@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Generate input file for Amazon Mechanical Turk translation experiment
  * @author Le
  */
 public class GenerateTranslationExperimentInputCSVFile {
@@ -38,11 +38,17 @@ public class GenerateTranslationExperimentInputCSVFile {
     //a linked list store a CS-sent/nonCS-sent pair
     private static LinkedList<String[]> sentencePairWithNoPersonalIdentifierList;
     //a linked list stores task one control sentences
-    private static LinkedList<String> taskOneControlSentenceList;
+    //private static LinkedList<String> taskOneControlSentenceList;
+    //a linked list stores task1 good control sentences
+    private static LinkedList<String> taskOneGoodControlSentenceList;
+    //a linked list stores task1 bad control sentences
+    private static LinkedList<String> taskOneBadControlSentenceList;
     //a linked list store cs-sentence ids used as controls that will be excluded from sampling
     private static LinkedList<String> csSentenceIDOfControlList;
-    //a linked list stores task two control sentences
-    private static LinkedList<String> taskTwoControlSentenceList;
+    //a linked list stores task2 good control sentences
+    private static LinkedList<String> taskTwoGoodControlSentenceList;
+    //a linked list stores task2 bad control sentences
+    private static LinkedList<String> taskTwoBadControlSentenceList;
     //a linked list stores n randomly sampled CS-sent/nonCS-sent pair
     private static LinkedList<String[]> nRandomlySampledPairsOfSentenceList;
     //a linked hashmap stores randomly assigned M pairs of CS-sent/nonCS-sent to P participants, with the constraints:
@@ -55,127 +61,55 @@ public class GenerateTranslationExperimentInputCSVFile {
     //a link stores random sentence lists with control sentences added
     private static LinkedList<LinkedList<String>> taskTwoSentenceLists;
     //a list to store participant IDs
-    private static LinkedList<String> workerIDList;
+    private static LinkedList<String> qualifiedWorkerIDList;
     //a link stores random sentence pair lists with no control sentence added yet
+    //private static LinkedHashMap<String, String> workerIDToWorkerInfo;
     private static LinkedList<LinkedList<String[]>> sentencePairLists;
     //a map stores a workerID to sentence list ID(s) for task one
-    private static LinkedHashMap<String, LinkedList<Integer>> taskOneWorkIDToSentenceListIDs;
+    private static LinkedHashMap<String, LinkedList<Integer>> taskOneWorkerIDToSentenceListIDs;
     //a map stores a workerID to sentence list ID(s) for task two
-    private static LinkedHashMap<String, LinkedList<Integer>> taskTwoWorkIDToSentenceListIDs;
+    private static LinkedHashMap<String, LinkedList<Integer>> taskTwoWorkerIDToSentenceListIDs;
     private static String date;
-
+    private static WorkerManager manager;
+    private static int numberOfAssignmentPerWorker;
+    
     public static void main(String[] args) {
         //initialize data
-        date = "11272019";
-        //initialize workerList
-        initializeWorkerList();
+        date = "12062019";
+        manager = new WorkerManager();
+        //initialize workerList and initialize variables in manager 
+        initializeQualifiedWorkerList();
         //initialize taskOneControlSentenceList and csSentenceIDOfControlList;
-        initializeTaskOneControlSentenceList();
+        initializeTaskOneControlSentenceList();     
         //initialize taskTwoControlSentenceList and add a new item (if there is any) to csSentenceIDOfControlList;
-        initializeTaskTwoControlSentenceList();
+        initializeTaskTwoControlSentenceList();      
         //initialize both codeSwitchSentenceList and nonCodeSwitchSentenceList;
         initializeSentenceWithNoPersonalIdentifierLists();
-        //initialize a list that randomly samples 700 pairs of CS-sent/nonCS-sent
-        initializenRandomlySampledNPairsOfSentences(700);
+        //initialize a list that randomly samples 500 pairs of CS-sent/nonCS-sent
+        initializenRandomlySampledNPairsOfSentences(500);
         //initialize a map that randomly assign 20 pairs of CS-sent/nonCS-sent in a way that each pair is seen by 3 different participants
-        //initialize senencePairList, taskOneWorkIDToSentenceListIDs and taskTwoWorkIDToSentenceListIDs
+        //initialize senencePairList, taskOneWorkerIDToSentenceListIDs and taskTwoWorkerIDToSentenceListIDs
         initializeSentencePairLists(20, 3);
-        //intiailize taskOneSentenceLists by randomly inserting control sentences in second half of each list in taskOneSentencePairLists
-        initializeTaskOneSentenceLists();
+        //intiailize taskOneSentenceLists by randomly inserting control sentences in second half of each list in taskOneSentencePairLists    
+        initializeTaskOneSentenceLists(numberOfAssignmentPerWorker);
         //intiailize taskTwoSentenceLists by randomly inserting control sentences in second half of each list in taskTwoSentencePairLists
-        initializeTaskTwoSentenceLists();
+        initializeTaskTwoSentenceLists(numberOfAssignmentPerWorker);
         //generate a set of files for task 1
-        saveTaskOneExperimentCSVFile();
+        //saveTaskOneExperimentCSVFile();
         //generate a set of files for task 2
         saveTaskTwoExperimentCSVFile();
+        assignQualificationToWorkers();
     }
 
-    private static void initializeWorkerList() {
-        workerIDList = new LinkedList<>();
-        BufferedReader br;
-        String filename = "Batch_3850105_batch_results.csv";
-        try {
-            //initialize input file path
-            File fileDir = new File("data/get_experiment_sentences/input/"
-                    + date
-                    + "/"
-                    + filename);
-            //initialize buffered reader br
-            //create an input stream read to read bytes and decode them to characters
-            //create a file input stream by opening a connection to an actual file and use decode "UTF-8"
-            br = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(fileDir), "UTF-8"));
-
-            //initialize a string to store each line in the input file
-            String line = "";
-
-            String otherThanQuote = " [^\"] ";
-            String quotedString = String.format(" \" %s* \" ", otherThanQuote);
-            String regex = String.format("(?x) "
-                    + // enable comments, ignore white spaces
-                    ",                         "
-                    + // match a comma
-                    "(?=                       "
-                    + // start positive look ahead
-                    "  (?:                     "
-                    + //   start non-capturing group 1
-                    "    %s*                   "
-                    + //     match 'otherThanQuote' zero or more times
-                    "    %s                    "
-                    + //     match 'quotedString'
-                    "  )*                      "
-                    + //   end group 1 and repeat it zero or more times
-                    "  %s*                     "
-                    + //   match 'otherThanQuote'
-                    "  $                       "
-                    + // match the end of the string
-                    ")                         ", // stop positive look ahead
-                    otherThanQuote, quotedString, otherThanQuote);
-            //String regex = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
-            //header
-            String header = br.readLine();
-            String[] headerColumns = header.split(regex);
-            //header length
-            int headerLength = headerColumns.length;
-            System.out.println("header length: " + headerLength);
-            while ((line = br.readLine()) != null) {
-
-                String[] columns = line.split(regex, -1);
-                //length should be header length -2 because apporve and reject column is missing
-                if (columns.length != headerLength - 2) {
-                    System.out.println("The line below does not has " + (headerLength - 2) + "items, but " + columns.length);
-                    System.out.println(line);
-                }
-                int chineseFluency = Integer.parseInt(columns[28].substring(1, columns[28].length() - 1));
-                int englishFluency = Integer.parseInt(columns[34].substring(1, columns[34].length() - 1));
-                //System.out.println("Chinese Fluency: " + chineseFluency);
-                //System.out.println("English Fluency: " + englishFluency);
-                //substring the leading " and trailing "
-                if (chineseFluency == 10 && englishFluency >= 9) {
-                    String workerID = columns[15].substring(1, columns[15].length() - 1);
-                    workerIDList.add(workerID);
-                }
-
-                //System.out.println("workID:" + workerID);
-//                for (int i = 0; i< columns.length; i++) {
-//                    System.out.println(i);
-//                    System.out.println(headerColumns[i]);
-//                    System.out.println(columns[i]);
-//                }
-            }
-            br.close();
-            System.out.println("Finished reading " + filename);
-            System.out.println("Size of workerIDList: " + workerIDList.size());
-
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GenerateTranslationExperimentInputCSVFile.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GenerateTranslationExperimentInputCSVFile.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GenerateTranslationExperimentInputCSVFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    private static void assignQualificationToWorkers() {
+        manager.saveQualificationAssignment(date, taskOneWorkerIDToSentenceListIDs, taskTwoWorkerIDToSentenceListIDs);
+    }
+        
+    private static void initializeQualifiedWorkerList() {   
+        qualifiedWorkerIDList = new LinkedList<>();        
+        manager.fillQualifiedWorkerIDList();
+        manager.fillWorkerInfoList("12062019_all_workers.csv");
+        qualifiedWorkerIDList = manager.getQualifiedWorkerIDList();
     }
 
     private static void initializeSentenceWithNoPersonalIdentifierLists() {
@@ -184,12 +118,10 @@ public class GenerateTranslationExperimentInputCSVFile {
         sentencePairWithNoPersonalIdentifierList = new LinkedList<>();
 
         BufferedReader br;
-        String filename = date + "_input_R_v4.csv";
+        String filename = "input_R_v4.csv";
         try {
             //initialize input file path
-            File fileDir = new File("data/get_experiment_sentences/input/"
-                    + date
-                    + "/"
+            File fileDir = new File("data/get_experiment_sentences/input/sample_source/"
                     + filename);
             //initialize buffered reader br
             //create an input stream read to read bytes and decode them to characters
@@ -264,7 +196,7 @@ public class GenerateTranslationExperimentInputCSVFile {
 
                         //true if the cs-sentence is used as a control
                         if (csSentenceIDOfControlList.contains(sentenceInfo)) {
-                            System.out.println(sentenceInfo + " is found.");
+                            //System.out.println(sentenceInfo + " is found.");
                             isControlCS = true;
                         } else {
                             isControlCS = false;
@@ -401,7 +333,7 @@ public class GenerateTranslationExperimentInputCSVFile {
         //initialize a random
         Random rand = new Random();
         //add n numbers to nNumbers list from 0 to n-1
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < nRandomlySampledPairsOfSentenceList.size(); i++) {
             nNumbers.add(i);
         }
         //Randomly permute the specified list using the specified source ofrandomness. 
@@ -425,17 +357,17 @@ public class GenerateTranslationExperimentInputCSVFile {
     // also intialize sentencePairLists
     private static void initializeSentencePairLists(int m, int r) {
         //number of workers
-        int p = workerIDList.size();
+        int p = qualifiedWorkerIDList.size();
         //get the size of sampled pairs
         int sampledPairSize = nRandomlySampledPairsOfSentenceList.size();
         //assign sentencePairListsForWorkers to a new list
         //sentencePairListsForWorkers = new LinkedList<>();
         //assign a sentencePairLists to a new list
         sentencePairLists = new LinkedList<>();
-        //assign taskOneWorkIDToSentenceListIDs to a new map
-        taskOneWorkIDToSentenceListIDs = new LinkedHashMap<>();
-        //assign taskTwoWorkIDToSentenceListIDs to a new map
-        taskTwoWorkIDToSentenceListIDs = new LinkedHashMap<>();
+        //assign taskOneWorkerIDToSentenceListIDs to a new map
+        taskOneWorkerIDToSentenceListIDs = new LinkedHashMap<>();
+        //assign taskTwoWorkerIDToSentenceListIDs to a new map
+        taskTwoWorkerIDToSentenceListIDs = new LinkedHashMap<>();
 
         //initialize a list to store a copy of nRandomlySampledPairsOfSentenceList
         LinkedList<String[]> sentencePairSample = new LinkedList<>();
@@ -447,9 +379,9 @@ public class GenerateTranslationExperimentInputCSVFile {
         Collections.shuffle(sentencePairSample, pairRandom);
 
         //number of sentence pair list IDs to be assigned to each worker
-        int numberOfSentencePairListIDsPerWorker = (int) Math.ceil(sampledPairSize * r / ((double) m * p));
+        numberOfAssignmentPerWorker = (int) Math.ceil(sampledPairSize * r / ((double) m * p));
 
-        System.out.println("Each of " + p + " workers will be assigned to " + numberOfSentencePairListIDsPerWorker + " sentence pair list(s).");
+        System.out.println("Each of " + p + " workers will be assigned to " + numberOfAssignmentPerWorker + " sentence pair list(s).");
 
         //add (sampledPairSize / m) sentence pair lists
         for (int i = 0; i < sampledPairSize; i += m) {
@@ -464,10 +396,10 @@ public class GenerateTranslationExperimentInputCSVFile {
         int lastAssignedSentencePairListID = -1;
         //assign each worker the same amount of sentence list ids
         for (int i = 0; i < p; i++) {
-            String currentWorkerID = workerIDList.get(i);
+            String currentWorkerID = qualifiedWorkerIDList.get(i);
             LinkedList<Integer> sentencePairListIDs = new LinkedList<>();
             //System.out.println("worker" + i);
-            for (int counter = 0; counter < numberOfSentencePairListIDsPerWorker; counter++) {
+            for (int counter = 0; counter < numberOfAssignmentPerWorker; counter++) {
                 //true if the last assigned sentence pair list ID is the last one in sentencePairLists
                 if (lastAssignedSentencePairListID == sentencePairLists.size() - 1) {
                     //reset the lastAssignedSentencePairListID to -1
@@ -478,46 +410,45 @@ public class GenerateTranslationExperimentInputCSVFile {
                 sentencePairListIDs.add(currentSentencePairListID);
                 lastAssignedSentencePairListID = currentSentencePairListID;
             }
-            if (sentencePairListIDs.size() != numberOfSentencePairListIDsPerWorker) {
+            if (sentencePairListIDs.size() != numberOfAssignmentPerWorker) {
                 System.out.println("The size of sentencePairListIDs is not equal to the size of numberOfSentencePairListIDsPerWorker, but is: " + sentencePairListIDs.size());
             }
             //assign the current sentence pair list id to the current workerID for task one
-            taskOneWorkIDToSentenceListIDs.put(currentWorkerID, sentencePairListIDs);
+            taskOneWorkerIDToSentenceListIDs.put(currentWorkerID, sentencePairListIDs);
         }
-        System.out.println("Size of taskOneWorkIDToSentenceListIDs: " + taskOneWorkIDToSentenceListIDs.size());
+        System.out.println("Size of taskOneWorkIDToSentenceListIDs: " + taskOneWorkerIDToSentenceListIDs.size());
 
-        //add the last pair in taskOneWorkIDToSentenceListIDs as the first pair in taskTwoWorkIDToSentenceListIDs
-        taskTwoWorkIDToSentenceListIDs.put(workerIDList.getFirst(), taskOneWorkIDToSentenceListIDs.get(workerIDList.getLast()));
-        //fill the taskTwoWorkIDToSentenceListIDs from the second to the last pair)
-        for (int i = 0; i < taskOneWorkIDToSentenceListIDs.size() - 1; i++) {
-            taskTwoWorkIDToSentenceListIDs.put(workerIDList.get(i + 1), taskOneWorkIDToSentenceListIDs.get(workerIDList.get(i)));
+        //add the last pair in taskOneWorkerIDToSentenceListIDs as the first pair in taskTwoWorkerIDToSentenceListIDs
+        taskTwoWorkerIDToSentenceListIDs.put(qualifiedWorkerIDList.getFirst(), taskOneWorkerIDToSentenceListIDs.get(qualifiedWorkerIDList.getLast()));
+        //fill the taskTwoWorkerIDToSentenceListIDs from the second to the last pair)
+        for (int i = 0; i < taskOneWorkerIDToSentenceListIDs.size() - 1; i++) {
+            taskTwoWorkerIDToSentenceListIDs.put(qualifiedWorkerIDList.get(i + 1), taskOneWorkerIDToSentenceListIDs.get(qualifiedWorkerIDList.get(i)));
         }
-        System.out.println("Size of taskTwoWorkIDToSentenceListIDs: " + taskTwoWorkIDToSentenceListIDs.size());
+        System.out.println("Size of taskTwoWorkIDToSentenceListIDs: " + taskTwoWorkerIDToSentenceListIDs.size());
 
         System.out.println("First assigned ID in task two: ");
-        for (Integer id : taskTwoWorkIDToSentenceListIDs.get(workerIDList.getFirst())) {
+        for (Integer id : taskTwoWorkerIDToSentenceListIDs.get(qualifiedWorkerIDList.getFirst())) {
             System.out.print(id + " ");
         }
         System.out.println();
         System.out.println("Last assigned ID in task one: ");
-        for (Integer id : taskOneWorkIDToSentenceListIDs.get(workerIDList.getLast())) {
+        for (Integer id : taskOneWorkerIDToSentenceListIDs.get(qualifiedWorkerIDList.getLast())) {
             System.out.print(id + " ");
         }
         System.out.println();
     }
 
-    //fill taskOneControlSentenceList and csSentenceIDOfControlList
+    //fill control sentence Lists and shuffle them, also add csSentenceID csSentenceIDOfControlList
     private static void initializeTaskOneControlSentenceList() {
         csSentenceIDOfControlList = new LinkedList<>();
-        taskOneControlSentenceList = new LinkedList<>();
+        taskOneGoodControlSentenceList = new LinkedList<>();
+        taskOneBadControlSentenceList = new LinkedList<>();
         //initialize a buffered reader
         BufferedReader br;
-        String filename = date + "_task1_controls.csv";
+        String filename = "task1_controls.csv";
         try {
             //initialize input file path
-            File fileDir = new File("data/get_experiment_sentences/input/"
-                    + date
-                    + "/"
+            File fileDir = new File("data/get_experiment_sentences/input/controls/"
                     + filename);
             //initialize buffered reader br
             //create an input stream read to read bytes and decode them to characters
@@ -531,25 +462,45 @@ public class GenerateTranslationExperimentInputCSVFile {
             //read until the end of the file is reached
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
+                String type = columns[1];
                 String controlID = "";
                 String sentence = "";
-                if (columns.length == 4) {
-                    controlID = columns[0];
-                    sentence = columns[3];
-                } else if (columns.length == 6) {
-                    controlID = columns[0];
-                    sentence = columns[3];
-                    String csSentenceInfo = columns[4] + "," + columns[5];
-                    csSentenceIDOfControlList.add(csSentenceInfo);
-                } else {
-                    System.out.println("Unexpected length for task1 control: " + columns.length);
+                switch (columns.length) {
+                    case 4:
+                        controlID = columns[0];
+                        sentence = columns[3];
+                        break;
+                    case 6:
+                        controlID = columns[0];
+                        sentence = columns[3];
+                        String csSentenceInfo = columns[4] + "," + columns[5];
+                        if(!csSentenceIDOfControlList.contains(csSentenceInfo)) {
+                            csSentenceIDOfControlList.add(csSentenceInfo);
+                        }                 
+                        break;
+                    default:
+                        System.out.println("Unexpected length for task1 control: " + columns.length);
+                        break;
                 }
                 String controlSentence = controlID + "," + sentence;
-                taskOneControlSentenceList.add(controlSentence);
+                if(type.equals("good")) {
+                    taskOneGoodControlSentenceList.add(controlSentence);
+                } else if(type.equals("bad")) {
+                    taskOneBadControlSentenceList.add(controlSentence);
+                } else {
+                    System.out.println("Unknow sentence type in task1 control sentence list:" + type);
+                }
+                
             }
             br.close();
 
-            System.out.println("The size of task1 control sentence list: " + taskOneControlSentenceList.size());
+            //shuffle the two list
+            Random rand = new Random();
+            Collections.shuffle(taskOneGoodControlSentenceList, rand);
+            Collections.shuffle(taskOneBadControlSentenceList, rand);
+            
+            System.out.println("The size of shuffled task1 good control sentence list: " + taskOneGoodControlSentenceList.size());
+            System.out.println("The size of shuffled task1 bad control sentence list: " + taskOneBadControlSentenceList.size());
             System.out.println("The size of csSentenceIDOfControlList: " + csSentenceIDOfControlList.size());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GenerateTranslationExperimentInputCSVFile.class.getName()).log(Level.SEVERE, null, ex);
@@ -560,16 +511,16 @@ public class GenerateTranslationExperimentInputCSVFile {
         }
     }
 
+    //fill control sentence Lists and shuffle them, also add csSentenceIDs to csSentenceIDOfControlList
     private static void initializeTaskTwoControlSentenceList() {
-        taskTwoControlSentenceList = new LinkedList<>();
+        taskTwoGoodControlSentenceList = new LinkedList<>();
+        taskTwoBadControlSentenceList = new LinkedList<>();
         //initialize a buffered reader
         BufferedReader br;
-        String filename = date + "_task2_controls.csv";
+        String filename = "task2_controls.csv";
         try {
             //initialize input file path
-            File fileDir = new File("data/get_experiment_sentences/input/"
-                    + date
-                    + "/"
+            File fileDir = new File("data/get_experiment_sentences/input/controls/"
                     + filename);
             //initialize buffered reader br
             //create an input stream read to read bytes and decode them to characters
@@ -582,26 +533,46 @@ public class GenerateTranslationExperimentInputCSVFile {
             String line = "";
             //read until the end of the file is reached
             while ((line = br.readLine()) != null) {
-                String[] columns = line.split(",");
-                String controlID = "";
-                String sentence = "";
-                if (columns.length == 7) {
-                    controlID = columns[0];
-                    sentence = columns[3] + "," + columns[4];
-                    String csSentenceInfo = columns[5] + "," + columns[6];
-                    if (!csSentenceIDOfControlList.contains(csSentenceInfo)) {
-                        //System.out.println(csSentenceInfo);
-                        csSentenceIDOfControlList.add(csSentenceInfo);
-                    }
-                } else {
-                    System.out.println("Unexpected length for task2 control: " + columns.length);
+                String[] columns = line.split(",");                
+                String controlID = columns[0];
+                String type = columns[1];
+                String sentence = columns[3] + "," + columns[4];
+                
+                switch (columns.length) {
+                    //code-switch sentence control
+                    case 7:
+                        String csSentenceInfo = columns[5] + "," + columns[6];
+                        if (!csSentenceIDOfControlList.contains(csSentenceInfo)) {
+                            //System.out.println(csSentenceInfo);
+                            csSentenceIDOfControlList.add(csSentenceInfo);
+                        }   break;
+                    //chinese textbook control.
+                    case 5:
+                        break;
+                    default:
+                        System.out.println("Unexpected length for task2 control: " + columns.length);
+                        break;
                 }
                 String controlSentence = controlID + "," + sentence;
-                taskTwoControlSentenceList.add(controlSentence);
+                if(type.equals("good")) {
+                    taskTwoGoodControlSentenceList.add(controlSentence);
+                } else if (type.equals("bad")) {
+                    taskTwoBadControlSentenceList.add(controlSentence);
+                } else {
+                    System.out.println("Unknow sentence type in task2 control sentence list:" + type);
+                }
+
             }
             br.close();
 
-            System.out.println("The size of task2 control sentence list: " + taskTwoControlSentenceList.size());
+            //shuffle the two list
+            Random rand = new Random();
+            Collections.shuffle(taskTwoGoodControlSentenceList, rand);
+            Collections.shuffle(taskTwoBadControlSentenceList, rand);
+            
+            
+            System.out.println("The size of shuffled task2 good control sentence list: " + taskTwoGoodControlSentenceList.size());
+            System.out.println("The size of shuffled task2 bad control sentence list: " + taskTwoBadControlSentenceList.size());
             System.out.println("The size of csSentenceIDOfControlList: " + csSentenceIDOfControlList.size());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GenerateTranslationExperimentInputCSVFile.class.getName()).log(Level.SEVERE, null, ex);
@@ -613,9 +584,39 @@ public class GenerateTranslationExperimentInputCSVFile {
     }
 
     //a method randomly insert controls to the second half of the sentence list for task one
-    private static void initializeTaskOneSentenceLists() {
+    private static void initializeTaskOneSentenceLists(int numberOfAssignments) {
         taskOneSentenceLists = new LinkedList<>();
+        LinkedList<LinkedList<String>> subsets = new LinkedList<>();
+        //true if taskOneGoodControlSentenceList and taskOneBadControlSentenceList do not have the same size
+        if(taskOneGoodControlSentenceList.size() != taskOneBadControlSentenceList.size()) {
+            System.err.println("Task1 good and bad control sentence list do not have the same size!");
+        }
+        int numberOfGoodConrols = (int) Math.ceil(taskOneGoodControlSentenceList.size() / (double) numberOfAssignments);
+        System.out.println("Number of good and bad controls of task1 in subset are both: " + numberOfGoodConrols);
+        int lastAddedControlSentenceIndex = -1;
+        for(int i = 0; i < numberOfAssignments; i++) {
+            LinkedList<String> subsetList = new LinkedList<>();
+            //check if the last added index is the last index in the control sentence list
+            //when encounter out of bound index error, move this if statement inside the for loop below
+            if(lastAddedControlSentenceIndex == taskOneGoodControlSentenceList.size() - 1) {
+                lastAddedControlSentenceIndex = -1;
+            }
+            for(int w = 0; w < (numberOfGoodConrols); w++) {
+                int currentAssignedControlSentenceIndex = lastAddedControlSentenceIndex + 1;
+                subsetList.add(taskOneGoodControlSentenceList.get(currentAssignedControlSentenceIndex));
+                subsetList.add(taskOneBadControlSentenceList.get(currentAssignedControlSentenceIndex));
+                lastAddedControlSentenceIndex = currentAssignedControlSentenceIndex;
+            }
+            if(subsetList.size() != numberOfGoodConrols * 2) {
+                System.err.println("The subset size of task1 is not " + numberOfGoodConrols * 2 + ", but " + subsetList.size());
+            } else {
+                subsets.add(subsetList);
+            }
+        }
+        System.out.println("Size of subsets of task1: " + subsets.size());
+        int lastAssignedIndexInSubsets = -1;
         for (LinkedList<String[]> pairList : sentencePairLists) {
+            
             LinkedList<String> sentenceList = new LinkedList<>();
             for (String[] pair : pairList) {
                 if (pair.length != 2) {
@@ -636,9 +637,7 @@ public class GenerateTranslationExperimentInputCSVFile {
             //Generate a random
             Random rand = new Random();
             //shuffle sentenceList before insert controls to the second half
-            Collections.shuffle(sentenceList, rand);
-            //shuffle control sentence list
-            Collections.shuffle(taskOneControlSentenceList, rand);
+            Collections.shuffle(sentenceList, rand);      
             //inclusive insert start point
             int insertStartPoint = (int) Math.floor(sentenceList.size() / (double) 2);
             //exclusive insert end point
@@ -651,11 +650,26 @@ public class GenerateTranslationExperimentInputCSVFile {
             //shuffle random number list
             Collections.shuffle(randomNumbers, rand);
             //System.out.println("start insert point at: " + insertStartPoint + " for a list of size: " + sentenceList.size());
-            for (int i = 0; i < taskOneControlSentenceList.size(); i++) {
-                String[] tokens = taskOneControlSentenceList.get(i).split(",");
+//FIXME loop through subset of the list
+            //reset lastAssignedIndexInSubsets if it is the last index of subsets
+            if(lastAssignedIndexInSubsets == subsets.size() -1) {
+                lastAssignedIndexInSubsets = -1;
+            }
+            int currentAssignedIndexInSubsets = lastAssignedIndexInSubsets + 1;
+            lastAssignedIndexInSubsets = currentAssignedIndexInSubsets;
+            LinkedList<String> subset = subsets.get(currentAssignedIndexInSubsets);
+            //shuffle subset
+            Collections.shuffle(subset, rand);
+            //check if there are numberOfGoodConrols * 2 controls
+            if(subset.size() != numberOfGoodConrols * 2) {
+                System.err.println("The size of subset is not " + numberOfGoodConrols * 2);
+            }
+            for (int i = 0; i < subset.size(); i++) {
+                String[] tokens = subset.get(i).split(",");
                 String controlSentence = "";
                 if (tokens.length == 2) {
                     //tokens[0] controlID, tokens[1] Chinese sentence
+                    //System.out.println(tokens[0]);
                     controlSentence = tokens[0] + "," + tokens[1];
                     //System.out.println("control sentence: " + controlSentence);
                 } else {
@@ -663,15 +677,44 @@ public class GenerateTranslationExperimentInputCSVFile {
                 }
                 sentenceList.add(randomNumbers.get(i), controlSentence);
             }
-            //System.out.println("size of sentenceList after controls added: " + sentenceList.size());
+            //System.out.println("size of task1 sentenceList after controls added: " + sentenceList.size());
             taskOneSentenceLists.add(sentenceList);
         }
         System.out.println("Size of taskOneSentenceLists: " + taskOneSentenceLists.size());
     }
 
     //a method randomly insert controls to the second half of the sentence list for task two
-    private static void initializeTaskTwoSentenceLists() {
+    private static void initializeTaskTwoSentenceLists(int numberOfAssignments) {
         taskTwoSentenceLists = new LinkedList<>();
+        LinkedList<LinkedList<String>> subsets = new LinkedList<>();
+        //true if taskTwoGoodControlSentenceList and taskTwoBadControlSentenceList do not have the same size
+        if(taskTwoGoodControlSentenceList.size() != taskTwoBadControlSentenceList.size()) {
+            System.err.println("Task2 good and bad control sentence list do not have the same size!");
+        }
+        int numberOfGoodConrols = (int) Math.ceil(taskTwoGoodControlSentenceList.size() / (double) numberOfAssignments);
+        System.out.println("Number of good and bad controls of task2 in subset are both: " + numberOfGoodConrols);
+        int lastAddedControlSentenceIndex = -1;
+        for(int i = 0; i < numberOfAssignments; i++) {
+            LinkedList<String> subsetList = new LinkedList<>();
+            //check if the last added index is the last index in the control sentence list
+            //when encounter out of bound index error, move this if statement inside the for loop below
+            if(lastAddedControlSentenceIndex == taskOneGoodControlSentenceList.size() - 1) {
+                lastAddedControlSentenceIndex = -1;
+            }
+            for(int w = 0; w < (numberOfGoodConrols); w++) {
+                int currentAssignedControlSentenceIndex = lastAddedControlSentenceIndex + 1;
+                subsetList.add(taskTwoGoodControlSentenceList.get(currentAssignedControlSentenceIndex));
+                subsetList.add(taskTwoBadControlSentenceList.get(currentAssignedControlSentenceIndex));
+                lastAddedControlSentenceIndex = currentAssignedControlSentenceIndex;
+            }
+            if(subsetList.size() != numberOfGoodConrols * 2) {
+                System.err.println("The subset size in task2 is not " + numberOfGoodConrols * 2 + ", but " + subsetList.size());
+            } else {
+                subsets.add(subsetList);
+            }
+        }
+        System.out.println("Size of subsets in task2: " + subsets.size());
+        int lastAssignedIndexInSubsets = -1; 
         for (LinkedList<String[]> pairList : sentencePairLists) {
             LinkedList<String> sentenceList = new LinkedList<>();
             for (String[] pair : pairList) {
@@ -689,8 +732,6 @@ public class GenerateTranslationExperimentInputCSVFile {
             Random rand = new Random();
             //shuffle sentenceList before insert controls to the second half
             Collections.shuffle(sentenceList, rand);
-            //shuffle control sentence list
-            Collections.shuffle(taskTwoControlSentenceList, rand);
             //inclusive insert start point
             int insertStartPoint = (int) Math.floor(sentenceList.size() / (double) 2);
             //exclusive insert end point
@@ -703,21 +744,37 @@ public class GenerateTranslationExperimentInputCSVFile {
             //shuffle random number list
             Collections.shuffle(randomNumbers, rand);
             //System.out.println("start insert point at: " + insertStartPoint + " for a list of size: " + sentenceList.size());
-            for (int i = 0; i < taskTwoControlSentenceList.size(); i++) {
-                String[] tokens = taskTwoControlSentenceList.get(i).split(",");
+
+            //reset lastAssignedIndexInSubsets if it is the last index of subsets
+            if(lastAssignedIndexInSubsets == subsets.size() -1) {
+                lastAssignedIndexInSubsets = -1;
+            }
+            int currentAssignedIndexInSubsets = lastAssignedIndexInSubsets + 1;
+            lastAssignedIndexInSubsets = currentAssignedIndexInSubsets;
+            LinkedList<String> subset = subsets.get(currentAssignedIndexInSubsets);
+            //shuffle subset
+            Collections.shuffle(subset, rand);
+            //check if there are numberOfGoodConrols * 2 controls
+            if(subset.size() != numberOfGoodConrols * 2) {
+                System.err.println("The size of subset is not " + numberOfGoodConrols * 2);
+            }
+            for (int i = 0; i < subset.size(); i++) {
+                String[] tokens = subset.get(i).split(",");
                 String controlSentence = "";
                 //System.out.println(tokens.length);
                 if (tokens.length == 3) {
                     //tokens[0] controlID, tokens[2] englsih sentence, tokens[1] Chinese translation
+                    //System.out.println(tokens[0]);
                     controlSentence = tokens[0] + "," + tokens[2] + "," + tokens[1];
                     //System.out.println(controlSentence);
                 } else {
-                    System.out.println("Unexpected length in task2 control: " + tokens.length);
+                    System.err.println("Unexpected length in task2 control: " + tokens.length);
                 }
                 sentenceList.add(randomNumbers.get(i), controlSentence);
             }
-            //System.out.println("size of sentenceList after controls added: " + sentenceList.size());
+            //System.out.println("size of task2 sentenceList after controls added: " + sentenceList.size());
             taskTwoSentenceLists.add(sentenceList);
+
         }
         System.out.println("Size of taskTwoSentenceLists: " + taskTwoSentenceLists.size());
     }
@@ -758,15 +815,15 @@ public class GenerateTranslationExperimentInputCSVFile {
 
         System.out.println("FILE_HEADER: " + FILE_HEADER);
         try {
-            String outputFilePath = "data/get_experiment_sentences/output/"
+            String outputFilePath = "data/get_experiment_sentences/output/task1/"
                     + date
-                    + "/task1/";
+                    + "/";
             int fileCount = 0;
             for (int i = 0; i < taskOneSentenceLists.size(); i++) {
                 fileCount++;
                 File outputfileName = new File(outputFilePath
                         + date
-                        + "_task1_branch_"
+                        + "_task1_set_"
                         + i
                         + ".csv");
                 FileOutputStream is = new FileOutputStream(outputfileName);
@@ -851,15 +908,15 @@ public class GenerateTranslationExperimentInputCSVFile {
 
         System.out.println("FILE_HEADER: " + FILE_HEADER);
         try {
-            String outputFilePath = "data/get_experiment_sentences/output/"
+            String outputFilePath = "data/get_experiment_sentences/output/task2/"
                     + date
-                    + "/task2/";
+                    + "/";
             int fileCount = 0;
             for (int i = 0; i < taskTwoSentenceLists.size(); i++) {
                 fileCount++;
                 File outputfileName = new File(outputFilePath
                         + date
-                        + "_task2_branch_"
+                        + "_task2_set_"
                         + i
                         + ".csv");
                 FileOutputStream is = new FileOutputStream(outputfileName);
@@ -945,10 +1002,8 @@ public class GenerateTranslationExperimentInputCSVFile {
                         w.append(COMMA_DELIMITER);
                     }
                 }
-
                 w.flush();
                 w.close();
-
             }
             System.out.println(fileCount + " files have been saved successfully!");
         } catch (UnsupportedEncodingException ex) {

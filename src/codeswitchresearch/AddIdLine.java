@@ -21,7 +21,6 @@ import java.util.LinkedList;
  */
 public class AddIdLine {
 
-    //cmucssa   pittcssa    psucssa
     private static String filename = "03022019_all_clean_and_pns_ver";
     private static LinkedList<String[]> sentenceList = new LinkedList<>();
 

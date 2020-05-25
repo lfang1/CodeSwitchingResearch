@@ -5,7 +5,6 @@
  */
 package codeswitchresearch;
 
-import codeswitchresearch.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,8 +16,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,8 +34,7 @@ public class AddEntropy {
 
     private static void readMainCSVFile() {
         BufferedReader br = null;
-        //String filename = "07302019_input_R_v3";
-        //String filename = "11152019_location_appended_input_R_v4_new_15_11_2019";
+
         String filename = "11152019_entropy_appended_input_R_v4";
         try {
             //Read CSV file
@@ -72,9 +68,7 @@ public class AddEntropy {
         BufferedReader br = null;
 
         try {
-            //Read CSV file
-            //File fileDir = new File("D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/08282019_55k_one_word_after_cs_point_entropy.csv");
-            //File fileDir = new File("D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_new_phrases_entropy.csv");            
+            //Read CSV file            
             File fileDir = new File("D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_one_word_after_cs_point_entropy.csv");
             br = new BufferedReader(
                     new InputStreamReader(

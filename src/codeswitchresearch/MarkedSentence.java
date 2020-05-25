@@ -8,7 +8,9 @@ package codeswitchresearch;
 import java.util.ArrayList;
 
 /**
- *
+ * A sentence that has all the punctuation been surrounded by star marks.
+ * This class contains fields that including indices of code-switched words (English 
+ * word), Chinese words, and punctuation.
  * @author Le
  */
 public class MarkedSentence {

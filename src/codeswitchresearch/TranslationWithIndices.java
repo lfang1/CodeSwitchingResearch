@@ -26,7 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Get indices of code-switched word,code-switched word in translation, 
+ * punctuation,and punctuation in translation.
  * @author Le
  */
 public class TranslationWithIndices {

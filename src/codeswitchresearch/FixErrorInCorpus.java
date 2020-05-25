@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 public class FixErrorInCorpus {
 
     private static PunctuationList punctList = new PunctuationList();
-    private static IndexAssigner indexAssigner = new IndexAssigner();
     private static LinkedList<String> lineList = new LinkedList<>();
 
     public static void main(String[] args) {
