@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package codeswitchresearch;
+package codeswitchedsentenceprocesser;
 
+import sentenceprocesser.MarkedSentence;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
