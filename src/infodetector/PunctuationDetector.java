@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package codeswitchresearch;
+package infodetector;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;

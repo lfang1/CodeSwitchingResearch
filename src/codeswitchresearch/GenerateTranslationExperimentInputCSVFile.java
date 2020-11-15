@@ -5,6 +5,8 @@
  */
 package codeswitchresearch;
 
+import infodetector.AmericanPhoneNumberDetector;
+import amtexperiment.WorkerManager;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

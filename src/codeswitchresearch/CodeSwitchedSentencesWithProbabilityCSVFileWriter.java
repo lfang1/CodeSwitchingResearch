@@ -5,6 +5,7 @@
  */
 package codeswitchresearch;
 
+import sentenceprocesser.MarkedSentence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

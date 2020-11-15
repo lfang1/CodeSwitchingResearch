@@ -5,8 +5,8 @@
  */
 package codeswitchresearch;
 
-import codeswitchresearch.IndependentProbabilityDatabase;
-import codeswitchresearch.PunctuationDetector;
+import database.IndependentProbabilityDatabase;
+import infodetector.PunctuationDetector;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 

@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package codeswitchresearch;
+package calentropy;
 
+import codeswitchresearch.CodeSwitchedSentence;
+import codeswitchresearch.SurprisalsOfASentence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,11 +34,12 @@ import static java.util.stream.Collectors.toMap;
  *
  * @author Le
  */
-public class CalculateEntropyOneWordAfterCSPoint {
+public class CalculateEntropy {
 
     private static LinkedList<CodeSwitchedSentence> csSentences = new LinkedList<>();
     private static LinkedList<SurprisalsOfASentence> surprisalList = new LinkedList<>();
-    private static String inputFileFolderPath = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/55k_one_word_after_cs_point_surprisal/11152019/";
+    //private static String inputFileFolderPath = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/55k_one_word_after_cs_point_surprisal/11152019/";
+    private static String inputFileFolderPath = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/55k/11152019/";
     private static LinkedHashMap<Integer, Double> lineIDToEntropy = new LinkedHashMap<>();
     private static LinkedHashMap<Integer, Double> sortedLineIDToEntropy = new LinkedHashMap<>();
 
@@ -61,7 +64,6 @@ public class CalculateEntropyOneWordAfterCSPoint {
         Pattern surprisalPattern = Pattern.compile("\\[\\s-?\\d+\\.?\\d*\\s\\]$");
 
         try {
-            System.out.println("Start calculating entroy for one word after cs-point");
             //double maxSurprisal = 0.0;
             
             //Reading all the csv file in inputFileFolderPath
@@ -125,7 +127,7 @@ public class CalculateEntropyOneWordAfterCSPoint {
                                         //double surprisal = Double.POSITIVE_INFINITY;
                                         //assign to the highest surprisal 10.16642 in input_R_v2
                                         //lowest prob 6.81679133e-11
-                                        //The max surprisal: 11.48991 within 2449 sentences for one word after cs point
+                                        //The max surprisal: 11.48991 within 2449 sentences
                                         //double surprisal = 10.16642;
                                         double surprisal = 11.48991;
                                         surprisalsInSentence.add(surprisal);
@@ -203,7 +205,7 @@ public class CalculateEntropyOneWordAfterCSPoint {
             System.out.println("There are " + lineIDToEntropy.size() + " lines before adding missing lines");
             
             
-            //Comment out the following block when calculating for entropy of one word after cs-point
+            //Comment this for block when calculating for entropy of one word after cs-point
             //If a lineIDToEntropy does not contain such line id, add the miising line id and assign entropy value of line 0
             //Remember to: add line_0 output csv file that was missed before in the folder 
             //2952 is the amount of sentence in 11152019_location_appended_input_R_v4_new_15_11_2019.csv
@@ -231,7 +233,7 @@ public class CalculateEntropyOneWordAfterCSPoint {
                             toMap(e -> e.getKey(), e -> e.getValue(),
                             (e1, e2) -> e2, LinkedHashMap::new));
             
-            System.out.println("There are " + sortedLineIDToEntropy.size() + " sorted lines");   
+            System.out.println("There are " + sortedLineIDToEntropy.size() + " sorted lines");           
             //System.out.println("The max surprisal: " + maxSurprisal);
         } catch (Exception ee) {
             ee.printStackTrace();
@@ -256,8 +258,8 @@ public class CalculateEntropyOneWordAfterCSPoint {
                 + "Entropy";
 
         System.out.println("FILE_HEADER: " + FILE_HEADER);
-        String outputFilename = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_one_word_after_cs_point_entropy.csv";
-        //String outputFilename = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_new_phrases_entropy.csv";
+        //String outputFilename = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_one_word_after_cs_point_entropy.csv";
+        String outputFilename = "D:/App/Dropbox/Fred/research/short_paper/add_entropy/output/entropy_result/11152019_55k_new_phrases_entropy.csv";
 
         try {
             File outputfileName = new File(outputFilename);

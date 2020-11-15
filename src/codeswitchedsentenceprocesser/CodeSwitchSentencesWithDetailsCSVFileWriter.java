@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package codeswitchresearch;
+package codeswitchedsentenceprocesser;
 
+import sentenceprocesser.MarkedSentence;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,14 +14,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Le
  */
-public class NonCodeSwitchSentencesWithDetailsCSVFileWriter {
+public class CodeSwitchSentencesWithDetailsCSVFileWriter {
 
     public static void saveToCSVFile(String corpusName, HashMap<Integer, MarkedSentence> markedSentencesMap)
             throws FileNotFoundException, UnsupportedEncodingException {
@@ -31,17 +30,33 @@ public class NonCodeSwitchSentencesWithDetailsCSVFileWriter {
         //CSV file header
 
         final String FILE_HEADER = "SentenceID,"
-                + "NonCodeSwitchedSentence,"
+                + "CodeSwitchedSentence,"
+                + "NumberOfCodeSwitching,"
+                + "CodeSwitch1,"
+                + "Translation1,"
+                + "CodeSwitch2,"
+                + "Translation2,"
+                + "CodeSwitch3,"
+                + "Translation3,"
+                + "CodeSwitch4,"
+                + "Translation4,"
+                + "CodeSwitch5,"
+                + "Translation5,"
+                + "CodeSwitch6,"
+                + "Translation6,"
                 + "ChineseWordCount,"
+                + "EnglishWordCount,"
                 + "PunctuationCount,"
                 + "IndicesOfChineseWord,"
+                + "IndicesOfCodeSwitchedWord,"
                 + "IndicesOfPunctuation";
 
+        //String corpusName value is one of the following:
         //psucssa
         //cmucssa
         //pittcssa
         try {
-            File outputfileName = new File("data/non-code-switched-sentences-with-details/"
+            File outputfileName = new File("data/code-switched-sentences-with-details/"
                     + corpusName
                     + "-bilingual-corpus.csv");
             System.out.println("The file will be saved in: "
@@ -61,14 +76,37 @@ public class NonCodeSwitchSentencesWithDetailsCSVFileWriter {
                     w.append(String.valueOf(id));
                     w.append(COMMA_DELIMITER);
                     w.append(String.valueOf(markedSentence.getWholeSentence()));
-                    w.append(COMMA_DELIMITER);                  
+                    w.append(COMMA_DELIMITER);
+                    int codeSwitchingOccurTimes = markedSentence.getCodeSwitchedPhrases().size();
+                    w.append(String.valueOf(codeSwitchingOccurTimes));
+                    w.append(COMMA_DELIMITER);
+                    markedSentence.getCodeSwitchedPhrases().forEach(phrase -> {
+                        try {
+                            w.append(phrase);
+                            w.append(COMMA_DELIMITER);
+                            w.append("");
+                            w.append(COMMA_DELIMITER);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                    for (int i = 0; i < (6 - codeSwitchingOccurTimes); i++) {
+                        w.append("");
+                        w.append(COMMA_DELIMITER);
+                        w.append("");
+                        w.append(COMMA_DELIMITER);
+                    }
                     w.append(String.valueOf(markedSentence.getChineseWordCount()));
-                    w.append(COMMA_DELIMITER);                 
+                    w.append(COMMA_DELIMITER);
+                    w.append(String.valueOf(markedSentence.getEnglishWordCount()));
+                    w.append(COMMA_DELIMITER);
                     w.append(String.valueOf(markedSentence.getPunctuationCount()));
                     w.append(COMMA_DELIMITER);
                     //replace ',' by '_' or ' '  remove " ' space
                     w.append(markedSentence.getIndicesOfChineseWord().toString().replace(",", "_").replace(" ", ""));
-                    w.append(COMMA_DELIMITER);                    
+                    w.append(COMMA_DELIMITER);
+                    w.append(markedSentence.getIndicesOfCodeSwitchedWord().toString().replace(",", "_").replace(" ", ""));
+                    w.append(COMMA_DELIMITER);
                     if (markedSentence.getIndicesOfPunctuation().isEmpty()) {
                         w.append("");
                     } else {
@@ -76,7 +114,7 @@ public class NonCodeSwitchSentencesWithDetailsCSVFileWriter {
                     }
                     w.append(NEW_LINE_SEPARATOR);
                 } catch (IOException ex) {
-                    Logger.getLogger(CodeSwitchedSentencesForTranslationCSVFileWriter.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
             });
 
@@ -88,10 +126,9 @@ public class NonCodeSwitchSentencesWithDetailsCSVFileWriter {
 
         } catch (IOException e) {
             System.err.println("Problem writing to the "
-                    + "data/non-code-switched-sentences-with-details/"
+                    + "data/code-switched-sentences-with-details/"
                     + corpusName
                     + "-bilingual-corpus.csv");
         }
     }
 }
-

@@ -5,6 +5,7 @@
  */
 package codeswitchresearch;
 
+import infodetector.PunctuationDetector;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

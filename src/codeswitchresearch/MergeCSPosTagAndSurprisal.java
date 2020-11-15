@@ -5,6 +5,7 @@
  */
 package codeswitchresearch;
 
+import database.IndependentProbabilityDatabase;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

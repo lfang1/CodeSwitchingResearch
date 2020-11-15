@@ -1,18 +1,16 @@
-package codeswitchresearch;
+package codeswitchedsentenceprocesser;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import codeswitchresearch.AmericanPhoneNumberDetector;
-import codeswitchresearch.BilingualCorpusProbabilityDatabase;
-import codeswitchresearch.CodeSwitchSentencesWithDetailsCSVFileWriter;
-import codeswitchresearch.IndependentProbabilityDatabase;
-import codeswitchresearch.MarkedSentence;
-import codeswitchresearch.PunctuationDetector;
-import codeswitchresearch.SentenceBoundaryMarker;
-import codeswitchresearch.UrlDetector;
+import infodetector.AmericanPhoneNumberDetector;
+import database.BilingualCorpusProbabilityDatabase;
+import database.IndependentProbabilityDatabase;
+import sentenceprocesser.MarkedSentence;
+import infodetector.PunctuationDetector;
+import infodetector.UrlDetector;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +20,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+import sentenceprocesser.SentenceBoundaryMarker;
 
 /**
  *
