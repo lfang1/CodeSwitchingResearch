@@ -1,6 +1,15 @@
 # CodeSwitchingResearch
  This project is written for processing Chinese-English bilingual text corpus. This document describes the procedure that we followed to collect the corpus and obtain the measurements related to the control factors for our code-switching research. The following is a step-by-step instruction.
 
+This project is one outcome of our Chinese-English code-switching paper:
+@inproceedings{codeswitching2020surprisal,
+  title={Surprisal Predicts Code-Switching in Chinese-English Bilingual Text},
+  author={Calvillo, Jes{\'u}s and Fang, Le and Cole, Jeremy and Reitter, David},
+  booktitle={Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages={4029--4039},
+  year={2020}
+}
+
 Step 1: 
 Run the following three python programs were written to scrap text from online forum.
 webscrap-cmucssa-v1.py; webscrap-pittcssa-v1.py; webscrap-psucssa-v1.py
