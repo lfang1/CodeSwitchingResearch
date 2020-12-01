@@ -2,6 +2,7 @@
  This project is written for processing Chinese-English bilingual text corpus. This document describes the procedure that we followed to collect the corpus and obtain the measurements related to the control factors for our code-switching research. The following is a step-by-step instruction.
 
 This project is one outcome of our Chinese-English code-switching paper:
+
 @inproceedings{codeswitching2020surprisal,
   title={Surprisal Predicts Code-Switching in Chinese-English Bilingual Text},
   author={Calvillo, Jes{\'u}s and Fang, Le and Cole, Jeremy and Reitter, David},
