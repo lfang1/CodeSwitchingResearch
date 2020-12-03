@@ -1,0 +1,43 @@
+
+SUBMISSION CONLL 03082019_location_appended_input_R_v2.csv was used as input for the R statistical analysis
+SUBMISSION ACL2020, EMNLP2020 11152019_two_entropies_appended_input_R_v4.csv
+
+
+
+DATA CLEANING PROCESS
+
+	having files of the form 11112018-cmucssa-period-added.csv, we use the script:
+clean_0_manual_classification_py to manually classify each CS chunk into: "clean","proper nouns","internet slang","other", among 	other classes. These files were saved in the folders of the form:
+ 	outputFiles_CMU, which are contained in the folder manual_CS_annotation 
+		in these folders the script:
+clean_1_fix_indices.py is used to create files of the form
+   ..._ind_fixed.csv where some indices are fixed (the first indices fixing)
+clean_2_merge_files_per_university.py is used then to merge the files per university into two files:
+	university+"_clean_and_propernouns.csv
+	university+"_other_cases.csv
+clean_3_merge_all.py is then used to merge across universities into the files:
+	university+_clean_and_propernouns.csv
+	university+_other_cases.csv
+clean_4_verify.py is then used to verify some punctuation and CS indices, producing files with the form: 
+	_ver.csv and _ver_new.csv 
+
+manual_CS_annotation Basically all files in this folder are different versions of the corpus, the output of the clean_# scripts, 	plus some manual corrections, being the last version:...
+
+11132019_all_clean_and_pns_ver_new.csv was used by Le to generate the sentences in the experiment and to generate the database:
+
+11152019_database Folder that contains the 11152019_bilingual_cs_database_v1.csv and 11152019_bilingual_non_cs_database_v1.csv
+	that are later used by...
+
+alignment_new.py takes as input:
+	cs_sentences_filename="in-output-files/11152019_database/11152019_bilingual_cs_database_v1.csv"
+	non_cs_sentences_filename="in-output-files/11152019_database/11152019_bilingual_non_cs_database_v1.csv"
+	which were provided in the file 11152019_database.zip by Le
+  outputs
+    r_files/input_R_v4_new_15_11_2019.csv
+    r_files/removed_inputR_v4.txt
+
+	After that, Le would take input_R_v4 and add extra columns (location, etc), giving
+11152019_location_appended_input_R_v4_new_15_11_2019.csv
+	And then, entropies are added in (also computed by Le)
+11152019_two_entropies_appended_input_R_v4.csv, which is the input for Bilingual_v2.R (our final statistical analysis)
+
