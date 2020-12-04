@@ -4,6 +4,22 @@
  
  https://www.aclweb.org/anthology/2020.emnlp-main.330.pdf
  
+ ABSTRACT:
+ Why do bilinguals switch languages within
+a sentence? The present observational study
+asks whether word surprisal and word entropy predict code-switching in bilingual written conversation. We describe and model a
+new dataset of Chinese-English text with 1476
+clean code-switched sentences, translated back
+into Chinese. The model includes known
+control variables together with word surprisal
+and word entropy. We found that word surprisal, but not entropy, is a significant predictor that explains code-switching above and beyond other well-known predictors. We also
+found sentence length to be a significant predictor, which has been related to sentence complexity. We propose high cognitive effort as a
+reason for code-switching, as it leaves fewer
+resources for inhibition of the alternative language. We also corroborate previous findings,
+but this time using a computational model of
+surprisal, a new language pair, and doing so
+for written language.
+ 
  If you use the code or data, please include a citation to the paper:
  
 @inproceedings{codeswitching2020surprisal,
