@@ -61,6 +61,7 @@ Each sentence is annotated with the following variables (those with CS-point in 
 * word entropy after cs-point
 
 Word surprisal and entropy values were obtained from a 5-gram language model trained on the Chinese Wikipedia and with the SRILM framework.
+POS-tags and dependeny relations were obtained with the Stanford Parser.
 
 ## Data Collection Process
 
