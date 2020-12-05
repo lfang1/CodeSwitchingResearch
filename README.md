@@ -1,8 +1,8 @@
 # Surprisal Predicts Code-Switching in Chinese-English Bilingual Text
 
- This project contains the code to obtain and analyze the data used in the paper: Surprisal Predicts Code-Switching in Chinese-English Bilingual Text, presented at the 2020 EMNLP conference. Here we also make available the resulting Chinese-English Code-Switching corpus.
+ This project contains the code to obtain and analyze the data used in the paper: [Surprisal Predicts Code-Switching in Chinese-English Bilingual Text]( https://www.aclweb.org/anthology/2020.emnlp-main.330.pdf
+), presented at the 2020 EMNLP conference. Here we also make available the resulting Chinese-English Code-Switching corpus.
  
- https://www.aclweb.org/anthology/2020.emnlp-main.330.pdf
  
  ABSTRACT:
  Why do bilinguals switch languages within
@@ -21,7 +21,7 @@ surprisal, a new language pair, and doing so
 for written language.
  
  If you use the code or data, please include a citation to the paper:
- 
+ ```
 @inproceedings{codeswitching2020surprisal,
   title={Surprisal Predicts Code-Switching in Chinese-English Bilingual Text},
   author={Calvillo, Jes{\'u}s and Fang, Le and Cole, Jeremy and Reitter, David},
@@ -29,8 +29,10 @@ for written language.
   pages={4029--4039}, 
   year={2020}
 }
-
+```
 If you would like to reproduce the statistical analysis, the file Bilingual_v3.R contains the R code that we used. The data used in the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv.
+
+## Data Collection Process
 
 This document describes the procedure that we followed to collect the corpus and obtain the measurements related to the control factors for our code-switching research. The following is a step-by-step instruction.
 
