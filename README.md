@@ -65,6 +65,6 @@ Step 7:
 After cleaning the sentences, we wrote the following codes to get a code-switched Database CSV file and a non-code-switched Database CSV file. By matching a similar non-code-switched sentence to a code-switched sentence, we got an input CSV file to run model selection in R.
 CSDatabaseWriter.java; NonCSDatabaseWriter.java
 
-Note:
-This project may contain bugs and errors when processing Chinese-English corpus. Please send us an email if you have any comment or find any problem related to this project. 
+**Note:**
+This project may contain bugs or errors when processing Chinese-English corpus. Please send us an email if you have any comment or find any problem related to this project. 
 
