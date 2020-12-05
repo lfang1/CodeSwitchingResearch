@@ -1,7 +1,7 @@
 # Surprisal Predicts Code-Switching in Chinese-English Bilingual Text
 
  This project contains the code to obtain and analyze the data used in the paper: [Surprisal Predicts Code-Switching in Chinese-English Bilingual Text]( https://www.aclweb.org/anthology/2020.emnlp-main.330.pdf
-), presented at the 2020 EMNLP conference. Here we also make available the resulting Chinese-English Code-Switching corpus.
+), presented at the 2020 Conference on Empirical Methods in Natural Language Processing. Here we also make available the resulting Chinese-English Code-Switching corpus.
  
  
  >ABSTRACT:
