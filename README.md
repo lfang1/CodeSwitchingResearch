@@ -30,7 +30,7 @@ for written language.
   year={2020}
 }
 ```
-If you would like to reproduce the statistical analysis, the file Bilingual_v3.R contains the R code that we used. The data used in the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv.
+If you would like to reproduce the statistical analysis, the file stat_analysis.R contains the R code that we used. The data used in the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv.
 
 ## Data Collection Process
 
