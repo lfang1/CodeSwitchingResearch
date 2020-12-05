@@ -42,7 +42,7 @@ Each sentence is annotated with the following variables (those with CS-point in 
 * first code-switched word and its translation
 * negative log of frequency (cs-point)
 * word surprisal (cs-point)
-* pos_tag (cs-point)
+* POS-tag (cs-point)
 * index of dependency governor (cs-point)
 * dependency relation to governor (cs-point)
 * surprisal values
@@ -56,8 +56,8 @@ Each sentence is annotated with the following variables (those with CS-point in 
 * if previous word is punctuation (binary, cs-point)
 * surprisal of previous word (cs-point)
 * various encodings of location (cs-point)
-* sentence length,
-* word entropy (cs-point),
+* sentence length
+* word entropy (cs-point)
 * word entropy after cs-point
 
 Word surprisal and entropy values were obtained from a 5-gram language model trained on the Chinese Wikipedia and with the SRILM framework.
