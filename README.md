@@ -4,7 +4,7 @@
 ), presented at the 2020 EMNLP conference. Here we also make available the resulting Chinese-English Code-Switching corpus.
  
  
- ABSTRACT:
+ >ABSTRACT:
  Why do bilinguals switch languages within
 a sentence? The present observational study
 asks whether word surprisal and word entropy predict code-switching in bilingual written conversation. We describe and model a
