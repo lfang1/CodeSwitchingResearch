@@ -32,6 +32,36 @@ for written language.
 ```
 If you would like to reproduce the statistical analysis, the file stat_analysis.R contains the R code that we used. The data used in the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv.
 
+## Corpus of Chinese-English Code-switched Sentences
+
+The corpus collected for the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv. This file contains 1476 Chinese-English code-switched sentences that were manually cleaned and translated into Chinese. Each sentence is also coupled with a Chinese sentence that was never code-switched and that has a similar syntactic structure to the code-switched one. 
+
+Each sentence is annotated with the following variables (those with CS-point in parantheses are related to only the first word that is code-switched):
+
+* translation into Chinese
+* first code-switched word and its translation
+* negative log of frequency (cs-point)
+* word surprisal (cs-point)
+* pos_tag (cs-point)
+* index of dependency governor (cs-point)
+* dependency relation to governor (cs-point)
+* surprisal values
+* average_surprisal
+* negative log of frequency using only the corpus (bilingual_corpus_frequency_negative_log_first_cs_word)
+* negative log of frequency using only the corpus of the translation (bilingual_corpus_frequency_negative_log_first_cs_word_trans)
+* original word length (cs-point)
+* translation word length (cs-point)
+* dependency distance to governor (cs-point)
+* if it is root (binary, cs-point)
+* if previous word is punctuation (binary, cs-point)
+* surprisal of previous word (cs-point)
+* various encodings of location (cs-point)
+* sentence length,
+* word entropy (cs-point),
+* word entropy after cs-point
+
+Word surprisal and entropy values were obtained from a 5-gram language model trained on the Chinese Wikipedia and with the SRILM framework.
+
 ## Data Collection Process
 
 This document describes the procedure that we followed to collect the corpus and obtain the measurements related to the control factors for our code-switching research. The following is a step-by-step instruction.
