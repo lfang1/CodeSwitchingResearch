@@ -30,11 +30,11 @@ for written language.
   year={2020}
 }
 ```
-If you would like to reproduce the statistical analysis, the file stat_analysis.R contains the R code that we used. The data used in the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv.
+If you would like to reproduce the statistical analysis, the file stat_analysis.R contains the R code that we used. The data used in the analysis is contained in the file [11152019_two_entropies_appended_input_R_v4.csv](https://github.com/lfang1/CodeSwitchingResearch/blob/master/11152019_two_entropies_appended_input_R_v4.csv).
 
 ## Corpus of Chinese-English Code-switched Sentences
 
-The corpus collected for the analysis is contained in the file 11152019_two_entropies_appended_input_R_v4.csv. This file contains 1476 Chinese-English code-switched sentences that were manually cleaned and translated into Chinese. Each sentence is also coupled with a Chinese sentence that was never code-switched and that has a similar syntactic structure to the code-switched one. 
+The corpus collected for the analysis is contained in the file [11152019_two_entropies_appended_input_R_v4.csv](https://github.com/lfang1/CodeSwitchingResearch/blob/master/11152019_two_entropies_appended_input_R_v4.csv). This file contains 1476 Chinese-English code-switched sentences that were manually cleaned and translated into Chinese. Each sentence is also coupled with a Chinese sentence that was never code-switched and that has a similar syntactic structure to the code-switched one. 
 
 Each sentence is annotated with the following variables (those with cs-point in parentheses are related to only the first word that is code-switched):
 
