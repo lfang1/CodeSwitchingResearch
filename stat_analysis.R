@@ -174,6 +174,17 @@ range=seq(0,5.154472 + 5*std.dv,0.01)
 y=dexp(range,lambda)
 plot(range,y,type="l", ylim=c(0,max(y)+0.01))
 
+#change location variables names
+#input_R_v2_preprocessed$location_30_40_30_percent<-input_R_v2_preprocessed$`30_40_30_percent_location`
+#input_R_v2_preprocessed$location_25_50_25_percent<-input_R_v2_preprocessed$`25_50_25_percent_location`
+#input_R_v2_preprocessed$location_10_80_10_percent<-input_R_v2_preprocessed$`10_80_10_percent_location`
+
+#output dataset afer preprocessing
+#write.csv(input_R_v2_preprocessed, "/Users/le/Documents/input_R_v2_preprocessed.csv", row.names = FALSE)
+
+#input_R_v2_preprocessed <- read.csv("/Users/le/Documents/input_R_v2_preprocessed.csv", header = TRUE, check.names = FALSE)
+#View(input_R_v2_preprocessed)
+#input_R_v2_preprocessed <- input_R_v2_preprocessed[-c(25)]
 
 ######################
 ###STANDARDIZATION###
@@ -376,6 +387,19 @@ variables<- c("location_10_80_10_percent","postag_converted","deprel_first_cs_wo
 #INTEREST VARS:  "surprisal_first_cs_word_trans","entropy_at_cs_point"
 #NOT USED: "if_previous_word_is_punctuation" (this info is mostly embedded in location),"if_it_is_root" (already contained in deprel_first_cs_word_trans)
 #MAYBE??   "bilingual_corpus_frequency_negative_log_first_cs_word_trans" (the size of the corpus is not large enough to give accurate estimates, it gives a very large difference between CS and non-CS, but not sure if reliable)
+
+input_R_v2_preprocessed_control = subset(input_R_v2_preprocessed, select = c("sent_type","location_10_80_10_percent","postag_converted","deprel_first_cs_word_trans","dependency_distance","dependency_distance_left","length_first_cs_word_trans","translation_sentence_length",
+                                                                             "frequency_negative_ln_first_cs_word_trans", "surprisal_first_cs_word_trans","entropy_at_cs_point"))
+input_R_v2_control = subset(input_R_v2, select = c("sent_type","location_10_80_10_percent","postag_converted","deprel_first_cs_word_trans","dependency_distance","dependency_distance_left","length_first_cs_word_trans","translation_sentence_length",
+                                                   "frequency_negative_ln_first_cs_word_trans", "surprisal_first_cs_word_trans","entropy_at_cs_point"))
+
+View(input_R_v2_preprocessed_control)
+View(input_R_v2_control)
+
+#output dataset after preprocessing
+#write.csv(input_R_v2_preprocessed_control, "/Users/le/Documents/input_R_v2_preprocessed.csv", row.names = FALSE)
+#output dataset after standardized 
+#write.csv(input_R_v2_control, "/Users/le/Documents/input_R_v2_standardized.csv", row.names = FALSE)
 
 ##################
 ##### A I C ######
