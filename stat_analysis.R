@@ -19,7 +19,7 @@ library(dplyr)
 #11152019_location_appended_input_R_v4_new_15_11_2019.csv
 
 #input file path 
-input_R_v2 <- read_csv("/Users/jesus/Documents/EclipseWorkspace/Le-DataCleaning/in-output-files/r_files/11152019_two_entropies_appended_input_R_v4.csv", 
+input_R_v2 <- read_csv("/Users/le/Documents/GitHub/CodeSwitchingResearch/11152019_two_entropies_appended_input_R_v4.csv", 
                        col_types = cols(sent_type = col_factor(levels = c("non-code-switch", "code-switch")),
                                         sent_id = col_integer(), 
                                         university = col_factor(levels = c("CMU","PIT", "PSU")), 
